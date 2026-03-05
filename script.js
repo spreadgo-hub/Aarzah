@@ -39,6 +39,111 @@ const AppUtils = (() => {
   };
 })();
 
+// ========== SECURITY MANAGER (NEW) ==========
+class SecurityManager {
+  constructor() {
+    this.sessionId = localStorage.getItem('aarzah_session_id');
+    this.csrfToken = localStorage.getItem('aarzah_csrf_token');
+    this.APIEndpoint = 'http://localhost:3000'; // Change to actual backend URL
+  }
+
+  async initSession() {
+    try {
+      const response = await fetch(`${this.APIEndpoint}/api/auth/session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (data.sessionId) {
+        this.sessionId = data.sessionId;
+        this.csrfToken = data.csrfToken;
+        localStorage.setItem('aarzah_session_id', data.sessionId);
+        localStorage.setItem('aarzah_csrf_token', data.csrfToken);
+      }
+    } catch (e) {
+      console.warn('Session init failed:', e);
+    }
+  }
+
+  async validateCart(cartItems) {
+    if (!this.sessionId) await this.initSession();
+    try {
+      const response = await fetch(`${this.APIEndpoint}/api/products/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-ID': this.sessionId,
+          'X-CSRF-Token': this.csrfToken
+        },
+        body: JSON.stringify({ items: cartItems, sessionId: this.sessionId })
+      });
+      return await response.json();
+    } catch (e) {
+      console.error('Cart validation error:', e);
+      return { success: false };
+    }
+  }
+
+  async validateCoupon(code, subtotal) {
+    if (!this.sessionId) await this.initSession();
+    try {
+      const response = await fetch(`${this.APIEndpoint}/api/coupons/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-ID': this.sessionId,
+          'X-CSRF-Token': this.csrfToken
+        },
+        body: JSON.stringify({ code, sessionId: this.sessionId, subtotal })
+      });
+      return await response.json();
+    } catch (e) {
+      console.error('Coupon validation error:', e);
+      return { valid: false };
+    }
+  }
+
+  async calculateCheckout(phone, coupon) {
+    if (!this.sessionId) await this.initSession();
+    try {
+      const response = await fetch(`${this.APIEndpoint}/api/checkout/calculate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-ID': this.sessionId,
+          'X-CSRF-Token': this.csrfToken
+        },
+        body: JSON.stringify({ sessionId: this.sessionId, phone, coupon })
+      });
+      return await response.json();
+    } catch (e) {
+      console.error('Checkout calculation error:', e);
+      return { success: false };
+    }
+  }
+
+  async placeOrder(checkoutId, phone, paymentMethod) {
+    if (!this.sessionId) await this.initSession();
+    try {
+      const response = await fetch(`${this.APIEndpoint}/api/orders/place`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-ID': this.sessionId,
+          'X-CSRF-Token': this.csrfToken
+        },
+        body: JSON.stringify({ checkoutId, sessionId: this.sessionId, phone, paymentMethod })
+      });
+      return await response.json();
+    } catch (e) {
+      console.error('Order placement error:', e);
+      return { success: false };
+    }
+  }
+}
+
+const security = new SecurityManager();
+
 // ========== CART MANAGEMENT (OPTIMIZED) ==========
 class Cart {
   constructor() {
@@ -438,6 +543,9 @@ function initLoginPage() {
 
 // ========== INITIALIZATION (OPTIMIZED) ==========
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize secure session
+  security.initSession();
+  
   // Initialize menu
   MenuManager.init();
   

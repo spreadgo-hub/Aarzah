@@ -264,7 +264,7 @@
     };
 
     // Initialize checkout page
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       // Check if user is logged in - if not, redirect to login
       const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
       const isLoggedIn = (user && user.phone) || sessionStorage.getItem('userLoggedIn');
@@ -274,6 +274,9 @@
         window.location.href = 'login.html';
         return;
       }
+      
+      // Initialize secure session
+      await security.initSession();
       
       initCheckout();
       loadSavedAddress();
@@ -293,33 +296,41 @@
       }
     }
 
-    function applyCoupon() {
-      const couponCode = document.getElementById('couponCode').value.trim().toUpperCase();
-      const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
-      const coupon = coupons.find(c => c.code === couponCode);
+    async function applyCoupon() {
+      const couponCode = document.getElementById('couponCode').value.trim();
       
       if(!couponCode) {
         document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Please enter a coupon code</span>';
         return;
       }
       
-      if(!coupon) {
-        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Invalid coupon code</span>';
-        return;
+      try {
+        // Get current cart subtotal
+        const cartItems = JSON.parse(localStorage.getItem('aarzah_cart') || '[]');
+        const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        // Validate coupon server-side
+        const result = await security.validateCoupon(couponCode, subtotal);
+        
+        if(result.valid) {
+          localStorage.setItem('aarzah_applied_coupon', JSON.stringify({
+            code: result.code,
+            discount: result.discount,
+            amount: result.amount,
+            validatedAt: new Date().toISOString()
+          }));
+          document.getElementById('couponMessage').innerHTML = `<span style="color:#2e7d32">✓ Coupon applied: ${result.discount}% off (₹${result.amount})</span>`;
+          updateOrderTotal();
+        } else {
+          document.getElementById('couponMessage').innerHTML = `<span style="color:#d32f2f">${result.message || 'Invalid or expired coupon'}</span>`;
+        }
+      } catch(e) {
+        console.error('Coupon validation error:', e);
+        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Server error validating coupon</span>';
       }
-      
-      const now = new Date();
-      if(coupon.expiryDate && new Date(coupon.expiryDate) < now) {
-        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Coupon has expired</span>';
-        return;
-      }
-      
-      localStorage.setItem('aarzah_applied_coupon', JSON.stringify(coupon));
-      document.getElementById('couponMessage').innerHTML = `<span style="color:#2e7d32">✓ Coupon applied: ${coupon.discount}% off</span>`;
-      initCheckout();
     }
 
-    function initiatePayment() {
+    async function initiatePayment() {
       window.logPaymentEvent('PAYMENT_INITIATED', { timestamp: new Date().toISOString() });
 
       const form = document.getElementById('addressForm');
@@ -340,7 +351,6 @@
         return;
       }
 
-      // Get payment method
       const paymentMethodRadio = document.querySelector('input[name="payment"]:checked');
       if(!paymentMethodRadio) {
         alert('❌ Please select a payment method');
@@ -357,7 +367,7 @@
       const state = document.getElementById('state').value;
       const pincode = document.getElementById('pincode').value.trim();
 
-      // Additional validation
+      // Validate phone and pincode
       if(phoneNumber.length !== 10) {
         alert('❌ Please enter a valid 10-digit phone number');
         return;
@@ -373,70 +383,84 @@
         return;
       }
 
-      // Save address to localStorage
-      const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
-      user.fullName = fullName;
-      user.phone = phoneNumber;
-      user.email = email;
-      user.address1 = address1;
-      user.address2 = address2;
-      user.city = city;
-      user.state = state;
-      user.pincode = pincode;
-      user.lastAddressUpdate = new Date().toISOString();
-      localStorage.setItem('aarzah_user', JSON.stringify(user));
+      try {
+        // SECURE STEP 1: Validate cart items server-side
+        const cartValidation = await security.validateCart(
+          cart.map(item => ({
+            id: item.id,
+            productId: item.productId || `${item.name.toLowerCase()}-${item.id}`,
+            quantity: item.quantity,
+            providedPrice: item.price * item.quantity
+          }))
+        );
 
-      const appliedCoupon = JSON.parse(localStorage.getItem('aarzah_applied_coupon') || '{}');
-      
-      // Calculate totals
-      let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      let discount = 0;
-      let shippingFee = 0;
-      
-      if(appliedCoupon.discount) {
-        discount = Math.floor(subtotal * appliedCoupon.discount / 100);
-      }
+        if (!cartValidation.success) {
+          alert('❌ Cart validation failed: ' + (cartValidation.error || 'Unknown error'));
+          return;
+        }
 
-      // Add shipping fee (free for orders over 500)
-      if(subtotal < 500) {
-        shippingFee = 50;
-      }
+        if (cartValidation.warning) {
+          alert('⚠️ ' + cartValidation.warning);
+        }
 
-      const total = subtotal - discount + shippingFee;
+        // SECURE STEP 2: Calculate checkout server-side
+        const appliedCoupon = JSON.parse(localStorage.getItem('aarzah_applied_coupon') || '{}');
+        const checkoutResult = await security.calculateCheckout(
+          phoneNumber,
+          appliedCoupon.code || null
+        );
 
-      // Validate total
-      if(total <= 0) {
-        alert('❌ Invalid order amount. Please review your cart.');
-        return;
-      }
+        if (!checkoutResult.success) {
+          alert('❌ Checkout calculation failed: ' + (checkoutResult.error || 'Unknown error'));
+          return;
+        }
 
-      // Create order object
-      const order = {
-        id: 'ORD' + Date.now(),
-        date: new Date().toISOString(),
-        customer: { 
-          fullName, 
-          phoneNumber: '+91' + phoneNumber,
-          email, 
-          address: `${address1}${address2 ? ', ' + address2 : ''}, ${city}, ${state} ${pincode}`
-        },
-        items: cart,
-        subtotal: subtotal,
-        discount,
-        shippingFee,
-        total: total,
-        paymentMethod: paymentMethod,
-        paymentStatus: 'Pending',
-        status: 'Processing',
-        couponCode: appliedCoupon.code || null,
-        createdAt: new Date().toISOString()
-      };
+        // Save user address
+        const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
+        user.fullName = fullName;
+        user.phone = phoneNumber;
+        user.email = email;
+        user.address1 = address1;
+        user.address2 = address2;
+        user.city = city;
+        user.state = state;
+        user.pincode = pincode;
+        user.lastAddressUpdate = new Date().toISOString();
+        localStorage.setItem('aarzah_user', JSON.stringify(user));
 
-      // Initiate payment based on method
-      if(paymentMethod === 'card' || paymentMethod === 'upi' || paymentMethod === 'wallet') {
-        initiateRazorpayPayment(order);
-      } else {
-        alert('❌ Invalid payment method selected');
+        // Create immutable order object with server-validated amounts
+        const order = {
+          id: 'ORD' + Date.now(),
+          date: new Date().toISOString(),
+          customer: { 
+            fullName, 
+            phoneNumber: phoneNumber,
+            email, 
+            address: `${address1}${address2 ? ', ' + address2 : ''}, ${city}, ${state} ${pincode}`
+          },
+          items: cartValidation.items,
+          subtotal: checkoutResult.subtotal,
+          discount: checkoutResult.discount,
+          discountCode: checkoutResult.discountCode,
+          shippingFee: checkoutResult.shipping,
+          total: checkoutResult.finalAmount,
+          paymentMethod: paymentMethod,
+          paymentStatus: 'Pending',
+          status: 'Processing',
+          checkoutId: checkoutResult.checkoutId,
+          cartHash: cartValidation.cartHash,
+          createdAt: new Date().toISOString()
+        };
+
+        // STEP 3: Show Razorpay payment UI with server-validated amount
+        if(paymentMethod === 'card' || paymentMethod === 'upi' || paymentMethod === 'wallet') {
+          initiateRazorpayPayment(order);
+        } else {
+          alert('❌ Invalid payment method selected');
+        }
+      } catch(e) {
+        console.error('Payment initiation error:', e);
+        alert('❌ Error initiating payment: ' + e.message);
       }
     }
 
@@ -502,46 +526,73 @@
       }
     }
 
-    function completeOrder(order) {
-      // Validate order
-      if(!order || !order.id) {
-        window.logPaymentEvent('ORDER_COMPLETION_FAILED', { error: 'Invalid order object' });
-        alert('Order creation failed. Please try again.');
-        return;
+    async function completeOrder(order) {
+      try {
+        // SECURE STEP 1: Validate order with server before finalizing
+        if(!order || !order.id || !order.checkoutId) {
+          window.logPaymentEvent('ORDER_COMPLETION_FAILED', { error: 'Invalid order object' });
+          alert('Order validation failed. Please try again.');
+          return;
+        }
+
+        // SECURE STEP 2: Call server endpoint to place order with full re-validation
+        const orderResult = await security.placeOrder(
+          order.checkoutId,
+          order.customer.phoneNumber,
+          order.paymentMethod
+        );
+
+        if (!orderResult.success) {
+          window.logPaymentEvent('ORDER_PLACEMENT_FAILED', { error: orderResult.error });
+          alert('❌ Order placement failed: ' + (orderResult.error || 'Unknown error'));
+          return;
+        }
+
+        // STEP 3: Order confirmed by server with verified amount
+        order.status = 'Confirmed';
+        order.serverId = orderResult.orderId;
+        order.serverAmount = orderResult.amount;
+        order.processedAt = new Date().toISOString();
+
+        // Save order to localStorage
+        const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+        orders.push(order);
+        localStorage.setItem('aarzah_orders', JSON.stringify(orders));
+
+        // Save order confirmation data
+        sessionStorage.setItem('lastOrderId', order.serverId);
+        sessionStorage.setItem('lastOrderTotal', order.serverAmount);
+
+        // Clear cart and coupon
+        localStorage.removeItem('aarzah_cart');
+        localStorage.removeItem('aarzah_applied_coupon');
+        localStorage.removeItem('aarzah_session_id');
+        localStorage.removeItem('aarzah_csrf_token');
+        
+        // Update cart badge
+        if(typeof updateCartBadge === 'function') {
+          updateCartBadge();
+        }
+
+        // Log successful order completion
+        window.logPaymentEvent('ORDER_COMPLETED', { 
+          orderId: order.serverId, 
+          amount: order.serverAmount,
+          paymentId: order.paymentId 
+        });
+
+        // Show success message
+        alert('✓ Order placed successfully!\n\n🎉 Server ID: ' + order.serverId + '\nAmount: ₹' + order.serverAmount);
+
+        // Redirect to confirmation page with delay
+        setTimeout(function() {
+          window.location.href = 'order-confirmation.html?orderId=' + order.serverId;
+        }, 500);
+      } catch(e) {
+        console.error('Order completion error:', e);
+        window.logPaymentEvent('ORDER_COMPLETION_ERROR', { error: e.message });
+        alert('❌ Error completing order: ' + e.message);
       }
-
-      // Update order status
-      order.status = 'Confirmed';
-      order.processedAt = new Date().toISOString();
-
-      // Save order to localStorage
-      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
-      orders.push(order);
-      localStorage.setItem('aarzah_orders', JSON.stringify(orders));
-
-      // Save order confirmation data
-      sessionStorage.setItem('lastOrderId', order.id);
-      sessionStorage.setItem('lastOrderTotal', order.total);
-
-      // Clear cart and coupon
-      localStorage.removeItem('aarzah_cart');
-      localStorage.removeItem('aarzah_applied_coupon');
-      
-      // Update cart badge
-      if(typeof updateCartBadge === 'function') {
-        updateCartBadge();
-      }
-
-      // Log successful order completion
-      window.logPaymentEvent('ORDER_COMPLETED', { orderId: order.id, amount: order.total });
-
-      // Show success message
-      alert('✓ Order placed successfully!\n\nOrder ID: ' + order.id + '\nAmount: ₹' + order.total);
-
-      // Redirect to confirmation page with delay
-      setTimeout(function() {
-        window.location.href = 'order-confirmation.html?orderId=' + order.id;
-      }, 500);
     }
   </script>
 
