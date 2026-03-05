@@ -1,0 +1,21 @@
+{
+  "name": "aarzah/website",
+  "description": "Aarzah - Everyday Ethnic Wear",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aarzah Team",
+      "email": "support@aarzah.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "Aarzah\\": "src/"
+    }
+  }
+}
