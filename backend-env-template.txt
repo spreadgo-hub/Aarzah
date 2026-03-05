@@ -1,0 +1,52 @@
+# ========== AARZAH WHATSAPP BACKEND ENVIRONMENT VARIABLES ==========
+# Copy this file to your backend as .env and fill in your actual values
+# NEVER commit .env to git - add it to .gitignore
+
+# ========== API SECURITY ==========
+API_VERIFICATION_TOKEN=your-secure-random-token-here-min-32-chars
+NODE_ENV=development
+
+# ========== BUSINESS INFO ==========
+BUSINESS_PHONE=8700060182
+BUSINESS_EMAIL=admin@aarzah.com
+
+# ========== WHATSAPP PROVIDER SELECTION ==========
+# Choose ONE: 'twilio', 'gupshup', or 'interakt'
+WHATSAPP_PROVIDER=gupshup
+
+# ========== TWILIO CONFIGURATION ==========
+# Get from: https://www.twilio.com/console
+# Only needed if WHATSAPP_PROVIDER=twilio
+TWILIO_ACCOUNT_SID=AC1234567890abcdef1234567890abcdef
+TWILIO_AUTH_TOKEN=your-twilio-auth-token-here
+TWILIO_WHATSAPP_NUMBER=+1234567890
+
+# ========== GUPSHUP CONFIGURATION ==========
+# Get from: https://www.gupshup.io/developer/dashboard
+# Only needed if WHATSAPP_PROVIDER=gupshup
+GUPSHUP_API_KEY=your-gupshup-api-key-here
+
+# ========== DATABASE CONFIGURATION ==========
+# MongoDB Example (optional, for message tracking)
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/aarzah
+DB_NAME=aarzah
+
+# ========== SERVER CONFIGURATION ==========
+PORT=3000
+LOG_LEVEL=info
+
+# ========== RAZORPAY (Optional, for payment verification) ==========
+RAZORPAY_KEY_ID=rzp_test_1DP5mmOlF5G0m9
+RAZORPAY_KEY_SECRET=your-razorpay-secret-here
+
+# ========== WEBHOOK CONFIGURATION ==========
+# For receiving message delivery status updates
+WEBHOOK_URL=https://api.aarzah.com/webhook/whatsapp
+WEBHOOK_VERIFY_TOKEN=webhook-verification-token
+
+# ========== RATE LIMITING ==========
+RATE_LIMIT_MAX_OTP=5
+RATE_LIMIT_WINDOW_MINUTES=60
+
+# ========== CORS SETTINGS ==========
+CORS_ORIGIN=https://aarzah.com

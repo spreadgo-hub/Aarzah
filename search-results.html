@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Search Results - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="search-container" style="flex:1;margin:0 8px">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search..." style="width:100%;padding:8px 12px;border:1px solid #e0e0e0;border-radius:20px;background:#f5f5f5;font-size:13px">
+      </div>
+      <a href="checkout.html" class="header-btn" id="cartBtn">🛍️</a>
+    </div>
+  </header>
+
+  <main style="padding:16px">
+    <!-- RESULTS HEADER -->
+    <div style="margin-bottom:16px">
+      <h1 id="resultsTitle" style="font-size:18px;font-weight:700">Search Results</h1>
+      <p id="resultCount" style="font-size:13px;color:#999"></p>
+    </div>
+
+    <!-- FILTER SECTION -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:8px">
+      <button onclick="filterResults('all')" class="filter-btn active" style="padding:8px 12px;border:1px solid #000;background:#000;color:#fff;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">All</button>
+      <button onclick="filterResults('price-low')" class="filter-btn" style="padding:8px 12px;border:1px solid #e0e0e0;background:#fff;color:#000;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Price: Low to High</button>
+      <button onclick="filterResults('price-high')" class="filter-btn" style="padding:8px 12px;border:1px solid #e0e0e0;background:#fff;color:#000;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Price: High to Low</button>
+      <button onclick="filterResults('rating')" class="filter-btn" style="padding:8px 12px;border:1px solid #e0e0e0;background:#fff;color:#000;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Top Rated</button>
+    </div>
+
+    <!-- PRODUCTS GRID -->
+    <div class="products-grid" id="searchResults"></div>
+
+    <!-- NO RESULTS -->
+    <div id="noResults" style="display:none;text-align:center;padding:40px 16px">
+      <div style="font-size:48px;margin-bottom:12px">🔍</div>
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">No products found</h2>
+      <p style="font-size:13px;color:#999;margin-bottom:20px">Try different keywords or browse our categories</p>
+      <a href="index.html" style="display:inline-block;padding:10px 20px;background:#000;color:#fff;text-decoration:none;border-radius:4px;font-weight:600">Browse Categories</a>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Search</span>
+    </a>
+    <a href="checkout.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <!-- SIDE MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+  <nav class="side-menu" id="sideMenu">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <span style="font-weight:700;font-size:18px">Menu</span>
+      <button class="menu-close" id="closeMenu">✕</button>
+    </div>
+    <div class="menu-category">
+      <button class="menu-category-btn" style="display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:none;cursor:pointer;color:#fff;font-weight:600;font-size:14px;padding:12px 0">
+        👗 Women's Ethnic
+        <span>▼</span>
+      </button>
+      <div class="menu-submenu" style="display:none;padding:8px 0">
+        <a href="#" class="menu-link" style="display:block;padding:8px 16px;color:#fff;text-decoration:none;font-size:13px">Kurtis</a>
+        <a href="#" class="menu-link" style="display:block;padding:8px 16px;color:#fff;text-decoration:none;font-size:13px">Suits</a>
+        <a href="#" class="menu-link" style="display:block;padding:8px 16px;color:#fff;text-decoration:none;font-size:13px">Sarees</a>
+        <a href="#" class="menu-link" style="display:block;padding:8px 16px;color:#fff;text-decoration:none;font-size:13px">Dresses</a>
+      </div>
+    </div>
+  </nav>
+
+  <script src="script.js"></script>
+  <script>
+    const mockProducts = [
+      { id: 1, name: 'Embroidered Cotton Kurti', price: 649, originalPrice: 899, rating: '⭐⭐⭐⭐⭐', reviews: 324, image: 'https://images.unsplash.com/photo-1584622281867-8f4ee5f12744?w=300&h=400&fit=crop' },
+      { id: 2, name: 'Silk Blend Saree', price: 1299, originalPrice: 1899, rating: '⭐⭐⭐⭐⭐', reviews: 156, image: 'https://images.unsplash.com/photo-1572993937426-da299827aae5?w=300&h=400&fit=crop' },
+      { id: 3, name: 'Designer Salwar Suit', price: 999, originalPrice: 1499, rating: '⭐⭐⭐⭐', reviews: 89, image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=300&h=400&fit=crop' },
+      { id: 4, name: 'Cotton Anarkali Dress', price: 749, originalPrice: 999, rating: '⭐⭐⭐⭐⭐', reviews: 201, image: 'https://images.unsplash.com/photo-1568518143037-0e100b8f505b?w=300&h=400&fit=crop' },
+      { id: 5, name: 'Printed Kurta', price: 549, originalPrice: 749, rating: '⭐⭐⭐⭐', reviews: 143, image: 'https://images.unsplash.com/photo-1570301227200-01493b3a9ad8?w=300&h=400&fit=crop' },
+      { id: 6, name: 'Embellished Lehenga', price: 1799, originalPrice: 2499, rating: '⭐⭐⭐⭐⭐', reviews: 278, image: 'https://images.unsplash.com/photo-1593730116681-687142d33d7d?w=300&h=400&fit=crop' }
+    ];
+
+    let currentFilter = 'all';
+    let currentResults = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('q') || '';
+      
+      document.getElementById('searchInput').value = query;
+      searchProducts(query);
+    });
+
+    function searchProducts(query) {
+      if(!query.trim()) {
+        document.getElementById('noResults').style.display = 'block';
+        return;
+      }
+
+      const queryLower = query.toLowerCase().trim();
+      currentResults = mockProducts.filter(p => 
+        p.name.toLowerCase().includes(queryLower)
+      );
+
+      document.getElementById('resultsTitle').textContent = `Results for "${query}"`;
+      document.getElementById('resultCount').textContent = currentResults.length + ' products found';
+
+      if(currentResults.length === 0) {
+        document.getElementById('noResults').style.display = 'block';
+        document.getElementById('searchResults').innerHTML = '';
+      } else {
+        document.getElementById('noResults').style.display = 'none';
+        displayResults();
+      }
+    }
+
+    function filterResults(filter) {
+      currentFilter = filter;
+      
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.style.backgroundColor = btn === event.target ? '#000' : '#fff';
+        btn.style.color = btn === event.target ? '#fff' : '#000';
+        btn.style.borderColor = btn === event.target ? '#000' : '#e0e0e0';
+      });
+
+      displayResults();
+    }
+
+    function displayResults() {
+      let sorted = [...currentResults];
+
+      if(currentFilter === 'price-low') {
+        sorted.sort((a, b) => a.price - b.price);
+      } else if(currentFilter === 'price-high') {
+        sorted.sort((a, b) => b.price - a.price);
+      } else if(currentFilter === 'rating') {
+        sorted.sort((a, b) => b.reviews - a.reviews);
+      }
+
+      const html = sorted.map(product => `
+        <div class="product-card" data-id="${product.id}">
+          <div class="product-image-link" style="position:relative;cursor:pointer" onclick="window.location.href='product-detail.html?id=${product.id}'">
+            <img src="${product.image}" alt="${product.name}" style="width:100%;height:200px;object-fit:cover;border-radius:4px">
+            <div class="sale-badge">SALE</div>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">${product.name}</h3>
+            <div class="product-price">
+              <span class="current-price">₹${product.price}</span>
+              <span class="original-price">₹${product.originalPrice}</span>
+            </div>
+            <div class="product-rating">${product.rating} <span style="font-size:11px;color:#999">(${product.reviews})</span></div>
+            <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">Add to Cart</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('searchResults').innerHTML = html;
+    }
+
+    // Search on Enter
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+          performSearch(searchInput.value);
+        }
+      });
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 80px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+</body>
+</html>

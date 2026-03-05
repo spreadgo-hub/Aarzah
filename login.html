@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Login - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #fff;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      background: #fff;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .login-logo {
+      font-size: 48px;
+      margin-bottom: 16px;
+      width: 140px;
+      height: 140px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .login-subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .otp-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .otp-input {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+    .otp-input:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+    .login-button {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .login-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .resend-text {
+      font-size: 12px;
+      color: #999;
+      margin-top: 16px;
+    }
+    .terms-text {
+      font-size: 11px;
+      color: #999;
+      margin-top: 24px;
+      line-height: 1.6;
+    }
+    .terms-text a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .country-code {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .phone-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    .phone-input:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body style="padding:0;margin:0;background:#f5f5f5">
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width:100%;height:100%;object-fit:contain">
+      </div>
+      
+      <!-- PHONE INPUT SECTION -->
+      <div id="phoneSection">
+        <div class="login-title">Log In / Sign Up</div>
+        <div class="login-subtitle">Enter your phone number to continue</div>
+        
+        <div class="country-code">
+          <input type="text" class="phone-input" value="+91" readonly style="width:60px;background:#f5f5f5">
+          <input type="tel" class="phone-input" id="phoneInput" placeholder="10-digit number" maxlength="10" pattern="[0-9]{10}">
+        </div>
+        
+        <button class="login-button" onclick="sendOTP()">Send OTP</button>
+        
+        <div class="terms-text">
+          By proceeding, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+
+      <!-- OTP VERIFICATION SECTION (Hidden by default) -->
+      <div id="otpSection" style="display:none;">
+        <div class="login-title">Verify OTP</div>
+        <div class="login-subtitle" id="otpSubtitle">OTP sent via WhatsApp</div>
+        
+        <div class="otp-input-group" id="otpInputGroup">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" onkeyup="moveToNext(this)">
+        </div>
+        
+        <button class="login-button" onclick="verifyOTP()">Verify OTP</button>
+        
+        <div class="resend-text">
+          Didn't receive OTP? <a href="#" onclick="sendOTP()" style="color:#000;text-decoration:none;font-weight:600">Resend</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+  <script src="whatsapp-integration.js"></script>
+  <script>
+    let phoneNumber = '';
+    let otpSent = false;
+
+    async function sendOTP() {
+      const phoneInput = document.getElementById('phoneInput');
+      const phone = phoneInput.value.trim();
+
+      if(!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+        alert('Please enter a valid 10-digit phone number');
+        return;
+      }
+
+      // Use business phone number from config
+      const businessPhone = AarzahConfig ? AarzahConfig.contact.businessPhone : '8700060182';
+      phoneNumber = '+91' + phone;
+      
+      console.log(`📱 OTP will be sent via WhatsApp from: +91${businessPhone}`);
+      console.log(`📱 OTP will be received on: ${phoneNumber}`);
+      
+      // Generate 6-digit OTP
+      const otp = String(Math.floor(Math.random() * 900000) + 100000);
+      
+      // Store OTP in localStorage with 10-minute expiry
+      const otpData = {
+        otp: otp,
+        phone: phoneNumber,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + (10 * 60 * 1000),
+        attempts: 0
+      };
+      localStorage.setItem('aarzah_otp', JSON.stringify(otpData));
+      
+      console.log(`✅ OTP Generated: ${otp}`);
+      console.log(`⏱️ Valid for 10 minutes`);
+      
+      otpSent = true;
+
+      // Show OTP section
+      document.getElementById('phoneSection').style.display = 'none';
+      document.getElementById('otpSection').style.display = 'block';
+      document.getElementById('otpSubtitle').textContent = `OTP sent via WhatsApp to ${phoneNumber}`;
+
+      // Focus on first OTP input
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs[0].focus();
+
+      // Show message with backend info
+      const message = `✅ OTP Sent to WhatsApp!\n\n📱 To: ${phoneNumber}\n📱 From: +91${businessPhone}\n\n⏱️ Valid for: 10 minutes\n❌ Max attempts: 5\n\n📝 DEV: Test OTP is ${otp}\n\n💡 In production, you'll receive this via WhatsApp after backend integration.`;
+      alert(message);
+    }
+
+    function moveToNext(current) {
+      const inputs = document.querySelectorAll('.otp-input');
+      const currentIndex = Array.from(inputs).indexOf(current);
+      
+      if(current.value.length === 1 && currentIndex < inputs.length - 1) {
+        inputs[currentIndex + 1].focus();
+      }
+      
+      if(currentIndex > 0 && current.value.length === 0) {
+        inputs[currentIndex - 1].focus();
+      }
+    }
+
+    function verifyOTP() {
+      const otpInputs = document.querySelectorAll('.otp-input');
+      const enteredOtp = Array.from(otpInputs).map(input => input.value).join('');
+
+      if(enteredOtp.length !== 6) {
+        alert('Please enter all 6 digits');
+        return;
+      }
+
+      // Verify against stored OTP
+      const otpData = JSON.parse(localStorage.getItem('aarzah_otp') || '{}');
+
+      if (!otpData.otp) {
+        alert('Please send OTP first');
+        return;
+      }
+
+      if (Date.now() > otpData.expiresAt) {
+        localStorage.removeItem('aarzah_otp');
+        alert('OTP expired. Please request a new one.');
+        location.reload();
+        return;
+      }
+
+      if (otpData.attempts >= 5) {
+        localStorage.removeItem('aarzah_otp');
+        alert('Too many attempts. Please try again later.');
+        location.reload();
+        return;
+      }
+
+      if (otpData.otp === enteredOtp) {
+        // OTP verified successfully
+        localStorage.removeItem('aarzah_otp');
+        
+        // Save login info
+        localStorage.setItem('aarzah_user', JSON.stringify({
+          phone: phoneNumber,
+          loginTime: new Date().toISOString(),
+          isLoggedIn: true
+        }));
+
+        alert('Login successful! Welcome to Aarzah');
+        window.location.href = 'index.html';
+      } else {
+        otpData.attempts++;
+        localStorage.setItem('aarzah_otp', JSON.stringify(otpData));
+        const attemptsLeft = 5 - otpData.attempts;
+        alert(`Invalid OTP. ${attemptsLeft} attempts remaining.`);
+      }
+    }
+
+    // Allow login by pressing Enter on OTP fields
+    document.addEventListener('DOMContentLoaded', function() {
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+          if(e.key === 'Enter') {
+            verifyOTP();
+          }
+        });
+      });
+
+      const phoneInput = document.getElementById('phoneInput');
+      phoneInput.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+          sendOTP();
+        }
+      });
+
+      // Check if user is already logged in
+      const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
+      if(user.isLoggedIn) {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+</body>
+</html>

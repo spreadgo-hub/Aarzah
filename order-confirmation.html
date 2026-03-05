@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#2e7d32">
+  <title>Order Confirmed - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    .confirmation-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 96px);
+      padding: 24px;
+      text-align: center;
+    }
+    .success-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: scaleIn 0.6s ease;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .confirmation-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .confirmation-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .order-card {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: left;
+      width: 100%;
+    }
+    .order-field {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 12px;
+    }
+    .order-field:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .order-field-label {
+      color: #666;
+      font-weight: 600;
+    }
+    .order-field-value {
+      font-weight: 700;
+      color: #000;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .btn-primary, .btn-secondary {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #000;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #000;
+      border: 1px solid #000;
+    }
+    .status-badge {
+      display: inline-block;
+      background: #2e7d32;
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" style="position: relative; z-index: 50">
+    <div class="header-content">
+      <div></div>
+      <span style="font-weight: 700; font-size: 18px">Aarzah</span>
+      <div style="width: 24px"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="confirmation-container">
+      <div class="success-icon">✓</div>
+      
+      <div class="confirmation-title">Order Confirmed!</div>
+      <div class="confirmation-subtitle">Thank you for shopping with Aarzah</div>
+
+      <!-- ORDER DETAILS -->
+      <div class="order-card">
+        <div class="order-field">
+          <span class="order-field-label">Order ID</span>
+          <span class="order-field-value" id="orderId">ORD123456789</span>
+        </div>
+        <div class="order-field">
+          <span class="order-field-label">Date & Time</span>
+          <span class="order-field-value" id="orderDate">Feb 28, 2026 • 2:30 PM</span>
+        </div>
+        <div class="order-field">
+          <span class="order-field-label">Items</span>
+          <span class="order-field-value" id="itemCount">1</span>
+        </div>
+        <div class="order-field">
+          <span class="order-field-label">Total Amount</span>
+          <span class="order-field-value" id="totalAmount">₹649</span>
+        </div>
+        <div class="order-field">
+          <span class="order-field-label">Payment Method</span>
+          <span class="order-field-value" id="paymentMethod">Cash on Delivery</span>
+        </div>
+        <div class="order-field">
+          <span class="order-field-label">Status</span>
+          <div style="text-align: right">
+            <span class="status-badge">Processing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELIVERY ADDRESS -->
+      <div class="order-card">
+        <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px">Delivering To</div>
+        <div id="deliveryAddress" style="font-size: 14px; line-height: 1.6; color: #666">
+          <div style="font-weight: 600; color: #000; margin-bottom: 8px">Name</div>
+          <div>Address Line 1<br>City, State Pincode</div>
+        </div>
+      </div>
+
+      <!-- ITEMS ORDERED -->
+      <div class="order-card">
+        <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px">Items Ordered</div>
+        <div id="itemsList" style="font-size: 14px; color: #666"></div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="action-buttons">
+        <button class="btn-primary" onclick="shareViaWhatsApp()">
+          📱 Share on WhatsApp
+        </button>
+        <a href="index.html" class="btn-secondary">
+          🏠 Back to Home
+        </a>
+      </div>
+
+      <div style="margin-top: 20px; font-size: 12px; color: #999; text-align: center; line-height: 1.6">
+        <div>You'll receive an SMS with tracking details shortly</div>
+        <div style="margin-top: 12px">Need help? <a href="https://wa.me/919999999999" style="color: #2e7d32; text-decoration: none; font-weight: 600">Chat with us on WhatsApp</a></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-top: 40px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('orderId');
+      
+      if(!orderId) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+      const order = orders.find(o => o.id === orderId);
+      
+      if(!order) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Populate order details
+      document.getElementById('orderId').textContent = order.id;
+      document.getElementById('orderDate').textContent = new Date(order.date).toLocaleString('en-IN', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      document.getElementById('itemCount').textContent = order.items.length + ' item(s)';
+      document.getElementById('totalAmount').textContent = '₹' + order.total;
+      document.getElementById('paymentMethod').textContent = 
+        order.paymentMethod === 'cod' ? 'Cash on Delivery' :
+        order.paymentMethod === 'card' ? 'Debit/Credit Card' :
+        order.paymentMethod === 'upi' ? 'UPI' : 'Wallet';
+
+      // Delivery address
+      const addr = order.customer;
+      document.getElementById('deliveryAddress').innerHTML = `
+        <div style="font-weight: 600; color: #000; margin-bottom: 8px">${addr.fullName}</div>
+        <div>${addr.address}</div>
+        <div style="margin-top: 8px; font-weight: 600">${addr.phoneNumber}</div>
+      `;
+
+      // Items list
+      let itemsHTML = '';
+      order.items.forEach((item, idx) => {
+        itemsHTML += `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0">
+            <div>
+              <div style="font-weight: 600; color: #000">${item.name}</div>
+              <div style="font-size: 12px; color: #999">Qty: ${item.quantity}</div>
+            </div>
+            <div style="font-weight: 600">₹${item.price * item.quantity}</div>
+          </div>
+        `;
+      });
+      if(order.discount > 0) {
+        itemsHTML += `
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-weight: 600; color: #2e7d32">
+            <span>Discount Applied</span>
+            <span>-₹${order.discount}</span>
+          </div>
+        `;
+      }
+      document.getElementById('itemsList').innerHTML = itemsHTML;
+
+      // If order status is still "Pending", mark as received (mock)
+      if(order.status === 'Pending') {
+        order.status = 'Order Received';
+        orders[orders.findIndex(o => o.id === orderId)] = order;
+        localStorage.setItem('aarzah_orders', JSON.stringify(orders));
+      }
+
+      window.currentOrder = order;
+    });
+
+    function shareViaWhatsApp() {
+      const order = window.currentOrder;
+      if(!order) return;
+
+      const message = `
+🎉 *Order Confirmation - Aarzah*
+
+Hi ${order.customer.fullName}! 👋
+
+Your order has been confirmed!
+
+📦 *Order ID:* ${order.id}
+💰 *Amount:* ₹${order.total}
+📅 *Date:* ${new Date(order.date).toLocaleDateString('en-IN')}
+
+*Items Ordered:*
+${order.items.map(i => `• ${i.name} (Qty: ${i.quantity}) - ₹${i.price * i.quantity}`).join('\n')}
+
+🚚 *Delivery Address:*
+${order.customer.address}
+
+📞 *Phone:* ${order.customer.phoneNumber}
+
+*Payment Method:* ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod.toUpperCase()}
+
+✅ Expected Delivery: 3-5 Business Days
+
+Thank you for shopping with Aarzah! 🙏
+We'll notify you with tracking details soon.
+
+Need help? Reply to this message!
+      `.trim();
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappURL = `https://wa.me/919999999999?text=${encodedMessage}`;
+      
+      window.open(whatsappURL, '_blank');
+    }
+  </script>
+</body>
+</html>

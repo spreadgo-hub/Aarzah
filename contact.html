@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Contact Us - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    .contact-container {
+      padding: 16px;
+      min-height: calc(100vh - 176px);
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .send-btn {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+
+    .send-btn:active {
+      transform: scale(0.98);
+    }
+
+    .success-message {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .info-box {
+      background: var(--bg-light);
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 200ms ease;
+    }
+
+    .info-box:active {
+      transform: scale(0.98);
+    }
+
+    .info-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .info-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 12px;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .info-link {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 200ms ease;
+    }
+
+    .info-link:active {
+      opacity: 0.8;
+    }
+
+    .faq-item {
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      transition: all 200ms ease;
+    }
+
+    .faq-question:active {
+      background: #e0e0e0;
+    }
+
+    .faq-arrow {
+      font-size: 16px;
+      transition: transform 200ms ease;
+    }
+
+    .faq-question.active .faq-arrow {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 300ms ease;
+      font-size: 12px;
+      color: var(--secondary);
+      line-height: 1.6;
+    }
+
+    .faq-answer.show {
+      max-height: 500px;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .response-time {
+      background: #fff3cd;
+      color: #856404;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .response-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <button class="header-btn" id="menuBtn">☰</button>
+      <div class="header-logo">Aarzah</div>
+      <a href="checkout.html" class="header-btn">🛍️<span class="cart-badge" id="cartBadge">0</span></a>
+    </div>
+    <div class="announcement">
+      <div class="announcement-slider">
+        <span>📦 Free shipping on orders above ₹499</span>
+        <span>🔄 Easy returns within 14 days</span>
+        <span>✓ 100% Authentic Products</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENU OVERLAY -->
+  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+  <!-- SIDE MENU -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <button class="close-btn" id="closeMenu">✕</button>
+    </div>
+    <ul class="menu-categories">
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Kurtis & Kurtas</button>
+        <ul class="submenu">
+          <li><a href="#">All Kurtis</a></li>
+          <li><a href="#">Cotton Kurtis</a></li>
+          <li><a href="#">Silk Kurtis</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Suits & Sets</button>
+        <ul class="submenu">
+          <li><a href="#">Salwar Suits</a></li>
+          <li><a href="#">Palazzo Suits</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="menu-divider"></div>
+    <div class="menu-support">
+      <a href="order-tracking.html" class="menu-link">📍 Order Tracking</a>
+      <a href="returns.html" class="menu-link">🔄 Return / Exchange</a>
+      <a href="contact.html" class="menu-link">📞 Contact Us</a>
+    </div>
+    <div class="menu-divider"></div>
+    <a href="login.html" class="menu-login-btn">Log In / Sign Up</a>
+  </nav>
+
+  <main class="contact-container">
+    <div class="contact-card">
+      <h1 style="font-size: 22px; font-weight: 700; margin-bottom: 4px; color: var(--primary)">Get in Touch</h1>
+      <p style="font-size: 13px; color: var(--secondary); margin-bottom: 16px">We'd love to hear from you. Send us your message and we'll respond as soon as possible.</p>
+
+      <div class="response-time">
+        <div class="response-icon">⏱️</div>
+        <div>We typically respond within 2-4 hours during business hours (10 AM - 6 PM IST)</div>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        ✓ Your message has been sent successfully! We'll get back to you soon.
+      </div>
+
+      <form onsubmit="submitContactForm(event)">
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input type="text" id="contactName" class="form-input" placeholder="Full name" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" id="contactEmail" class="form-input" placeholder="your.email@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number (Optional)</label>
+          <input type="tel" id="contactPhone" class="form-input" placeholder="Your 10-digit mobile number" maxlength="10">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subject *</label>
+          <input type="text" id="contactSubject" class="form-input" placeholder="e.g., Order Issue, Product Question" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea id="contactMessage" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
+        </div>
+
+        <button type="submit" class="send-btn">Send Message</button>
+      </form>
+    </div>
+
+    <div class="contact-card">
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--primary)">Our Channels</h2>
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-icon">💬</div>
+          <div class="info-title">WhatsApp</div>
+          <div class="info-value">Quick & Easy chat</div>
+          <a href="https://wa.me/919999999999" class="info-link">Message Us</a>
+        </div>
+        <div class="info-box">
+          <div class="info-icon">📧</div>
+          <div class="info-title">Email</div>
+          <div class="info-value">support@aarzah.com</div>
+          <a href="mailto:support@aarzah.com" class="info-link">Send Email</a>
+        </div>
+        <div class="info-box">
+          <div class="info-icon">☎️</div>
+          <div class="info-title">Call Us</div>
+          <div class="info-value">+91 9999 999 999</div>
+          <a href="tel:+919999999999" class="info-link">Call Now</a>
+        </div>
+        <div class="info-box">
+          <div class="info-icon">📍</div>
+          <div class="info-title">Address</div>
+          <div class="info-value">New Delhi, India</div>
+          <a href="https://maps.google.com" class="info-link">Get Directions</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--primary)">Frequently Asked Questions</h2>
+
+      <div id="faqContainer"></div>
+    </div>
+
+    <div class="contact-card">
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--primary)">Follow Us</h2>
+      <p style="font-size: 13px; color: var(--secondary); margin-bottom: 12px">Stay updated with latest collections and exclusive offers</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <a href="https://www.instagram.com/aarzahofficial/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #E4405F; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600">
+          📷 Instagram
+        </a>
+        <a href="https://www.facebook.com/people/Aarzah/61560892677244/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #1877F2; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600">
+          👍 Facebook
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Search</span>
+    </a>
+    <a href="checkout.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <script src="script.js"></script>
+  <script>
+    const faqData = [
+      {
+        question: "What are your shipping timelines?",
+        answer: "We ship within 24-48 hours of order confirmation. Delivery typically takes 3-5 business days depending on your location."
+      },
+      {
+        question: "What is your return policy?",
+        answer: "We offer hassle-free returns within 14 days of delivery. Items must be unused and in original packaging. Return shipping is free."
+      },
+      {
+        question: "Do you offer student/bulk discounts?",
+        answer: "Yes! Contact us for bulk orders and special discounts. We also have seasonal offers and coupon codes. Please email support@aarzah.com or WhatsApp us."
+      },
+      {
+        question: "Are your products genuine?",
+        answer: "100% authentic products guaranteed. We directly source from manufacturers and provide authenticity guarantee on all products."
+      },
+      {
+        question: "What payment methods do you accept?",
+        answer: "We accept all major payment methods including credit/debit cards, UPI, digital wallets, and net banking through Razorpay."
+      },
+      {
+        question: "How can I track my order?",
+        answer: "Use our Order Tracking page to check your order status in real-time. You'll also receive updates via email and WhatsApp."
+      }
+    ];
+
+    function initFAQ() {
+      const container = document.getElementById('faqContainer');
+      container.innerHTML = faqData.map((item, idx) => `
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(${idx})">
+            <span>${item.question}</span>
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            ${item.answer}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFAQ(idx) {
+      const questions = document.querySelectorAll('.faq-question');
+      const answers = document.querySelectorAll('.faq-answer');
+
+      questions[idx].classList.toggle('active');
+      answers[idx].classList.toggle('show');
+    }
+
+    function submitContactForm(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const phone = document.getElementById('contactPhone').value;
+      const subject = document.getElementById('contactSubject').value;
+      const message = document.getElementById('contactMessage').value;
+
+      const contactMessage = {
+        id: 'MSG' + Date.now(),
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        date: new Date().toISOString(),
+        status: 'New'
+      };
+
+      const messages = JSON.parse(localStorage.getItem('aarzah_contact_messages') || '[]');
+      messages.push(contactMessage);
+      localStorage.setItem('aarzah_contact_messages', JSON.stringify(messages));
+
+      document.getElementById('successMessage').classList.add('show');
+      document.querySelector('form').reset();
+
+      setTimeout(() => {
+        document.getElementById('successMessage').classList.remove('show');
+      }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMenu();
+      cart.updateBadge();
+      initFAQ();
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 80px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+</body>
+</html>
