@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Product Details - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" style="position:relative;z-index:50">
+    <div class="product-detail-header">
+      <button class="detail-back-btn">←</button>
+      <span style="flex:1;text-align:center;font-weight:600">Product Details</span>
+      <a href="checkout.html" class="header-btn" id="cartBtn2">🛍️</a>
+    </div>
+  </header>
+
+  <main style="padding-bottom:80px">
+    <!-- IMAGE CAROUSEL -->
+    <div class="image-carousel">
+      <div class="carousel-image">
+        <img id="carouselImg1" src="images/products/kurtis/embroidered-kurti.svg" alt="Product Image 1">
+      </div>
+      <div class="carousel-image">
+        <img id="carouselImg2" src="images/products/kurtis/embroidered-kurti.svg" alt="Product Image 2">
+      </div>
+      <div class="carousel-image">
+        <img id="carouselImg3" src="images/products/kurtis/embroidered-kurti.svg" alt="Product Image 3">
+      </div>
+      <div class="carousel-dots">
+        <div class="carousel-dot active"></div>
+        <div class="carousel-dot"></div>
+        <div class="carousel-dot"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="detail-info">
+      <h1 class="detail-name">Embroidered Cotton Kurti</h1>
+      
+      <div class="detail-price">
+        <span class="price">₹649</span>
+        <span class="original-price">₹849</span>
+        <span style="color:#2e7d32;font-weight:700;font-size:12px">-24% Off</span>
+      </div>
+
+      <div class="detail-rating">⭐⭐⭐⭐⭐ (324 reviews) | Sold by Aarzah</div>
+
+      <p class="detail-description">
+        Premium quality cotton kurti with beautiful embroidered details. Perfect for everyday wear. Machine washable, fade-resistant fabric. Available in multiple colors and sizes.
+      </p>
+
+      <!-- COLOR SELECTOR -->
+      <div class="color-selector">
+        <label class="color-label">Color *</label>
+        <div class="color-options">
+          <button class="color-btn active" data-color="red" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Red</button>
+          <button class="color-btn" data-color="blue" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Blue</button>
+          <button class="color-btn" data-color="green" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Green</button>
+          <button class="color-btn" data-color="black" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Black</button>
+        </div>
+      </div>
+
+      <!-- SIZE SELECTOR -->
+      <div class="size-selector">
+        <label class="size-label">Size *</label>
+        <div class="size-options">
+          <button class="size-btn">XS</button>
+          <button class="size-btn">S</button>
+          <button class="size-btn">M</button>
+          <button class="size-btn active">L</button>
+          <button class="size-btn">XL</button>
+          <button class="size-btn">XXL</button>
+        </div>
+      </div>
+
+      <!-- TRUST BADGES -->
+      <div class="trust-badges">
+        <div class="badge">
+          <span class="badge-icon">�</span>
+          <span>Secure Payment</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🔄</span>
+          <span>Easy Returns</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">✓</span>
+          <span>Authentic</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🚚</span>
+          <span>Free Shipping ₹499+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESCRIPTION SECTION -->
+    <div class="detail-info" style="background:#f5f5f5;border:none;margin-top:8px">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Product Details</h3>
+      <div style="font-size:12px;color:#666;line-height:1.8">
+        <p><strong>Material:</strong> 100% Cotton</p>
+        <p><strong>Fit:</strong> Regular Fit</p>
+        <p><strong>Care:</strong> Machine wash in cold water</p>
+        <p><strong>Delivery:</strong> 3-5 business days</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- SELECTION REMINDER -->
+  <div id="selectionReminder" style="display:none;padding:12px;margin:16px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:4px;color:#c9893d;font-size:13px;text-align:center">
+    ⚠️ Please select both Color and Size before adding to cart
+  </div>
+
+  <!-- STICKY BOTTOM BUTTONS -->
+  <div class="sticky-bottom">
+    <button class="add-to-cart-full" onclick="addProductToCart()">Add to Cart</button>
+    <button class="buy-now-btn" onclick="buyNowProduct()">Buy Now</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Search</span>
+    </a>
+    <a href="checkout.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <script src="script.js"></script>
+  <script>
+    // Color to images mapping (using local images)
+    const colorImages = {
+      'red': [
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg'
+      ],
+      'blue': [
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg'
+      ],
+      'green': [
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg'
+      ],
+      'black': [
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg',
+        'images/products/kurtis/embroidered-kurti.svg'
+      ]
+    };
+
+    // Get selected color and size
+    function getSelectedColor() {
+      const selected = document.querySelector('.color-btn.active');
+      return selected ? selected.getAttribute('data-color') : null;
+    }
+
+    function getSelectedSize() {
+      const selected = document.querySelector('.size-btn.active');
+      return selected ? selected.textContent : null;
+    }
+
+    // Update carousel images based on selected color
+    function updateCarouselImages(color) {
+      const images = colorImages[color] || colorImages['red'];
+      document.getElementById('carouselImg1').src = images[0];
+      document.getElementById('carouselImg2').src = images[1];
+      document.getElementById('carouselImg3').src = images[2];
+    }
+
+    // Check if color and size are selected
+    function isSelectionValid() {
+      const color = getSelectedColor();
+      const size = getSelectedSize();
+      return color && size;
+    }
+
+    // Update reminder visibility (informational only, not blocking)
+    function updateReminder() {
+      const reminder = document.getElementById('selectionReminder');
+      if (reminder && isSelectionValid()) {
+        reminder.style.display = 'none';
+      }
+    }
+
+    // Add to cart WITHOUT blocking - use default values if not selected
+    window.addProductToCart = function() {
+
+      const name = document.querySelector('.detail-name').textContent;
+      const price = parseInt(document.querySelector('.detail-price .price').textContent.replace(/[₹,]/g, ''));
+      const image = document.querySelector('.carousel-image img').src;
+      const color = getSelectedColor() || 'Default';
+      const size = getSelectedSize() || 'Default';
+
+      // Add to cart with color and size info (or defaults)
+      const cartItem = {
+        id: Date.now(),
+        name: `${name}${color !== 'Default' ? ` - ${color.charAt(0).toUpperCase() + color.slice(1)}` : ''}${size !== 'Default' ? ` (${size})` : ''}`,
+        price,
+        image,
+        quantity: 1,
+        color,
+        size,
+        addedAt: new Date().toISOString()
+      };
+
+      const cart = JSON.parse(localStorage.getItem('aarzah_cart') || '[]');
+      cart.push(cartItem);
+      localStorage.setItem('aarzah_cart', JSON.stringify(cart));
+
+      // Update cart badge
+      const cartBadge = document.getElementById('cartBadge');
+      if (cartBadge) {
+        cartBadge.textContent = cart.length;
+        cartBadge.style.display = 'flex';
+      }
+
+      // Show toast
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      const colorText = color !== 'Default' ? ` - ${color.charAt(0).toUpperCase() + color.slice(1)}` : '';
+      const sizeText = size !== 'Default' ? ` (${size})` : '';
+      toast.textContent = `Added to cart!${colorText}${sizeText}`;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideUp 300ms ease reverse forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    };
+
+    // Buy now (no selection required)
+    window.buyNowProduct = function() {
+      addProductToCart();
+      setTimeout(() => {
+        window.location.href = 'checkout.html';
+      }, 300);
+    };
+
+    // Initialize product detail with event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Color button listeners
+      const colorBtns = document.querySelectorAll('.color-btn');
+      colorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          updateCarouselImages(btn.getAttribute('data-color'));
+          updateReminder();
+        });
+      });
+
+      // Size button listeners
+      const sizeBtns = document.querySelectorAll('.size-btn');
+      sizeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          updateReminder();
+        });
+      });
+
+      // Back button
+      const backBtn = document.querySelector('.detail-back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => window.history.back());
+      }
+
+      // Initial carousel setup
+      const carousel = document.querySelector('.image-carousel');
+      const dots = document.querySelectorAll('.carousel-dot');
+      if (carousel) {
+        carousel.addEventListener('scroll', () => {
+          const index = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+        });
+      }
+
+      // Initialize reminder visibility
+      updateReminder();
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 20px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+</body>
+</html>

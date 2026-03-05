@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Admin Panel - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    body.admin-body { padding: 0; }
+    
+    .admin-login {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5e6d3 0%, #e8d4c0 100%);
+      padding: 16px;
+    }
+
+    .login-card {
+      background: white;
+      padding: 40px 32px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      border-top: 4px solid var(--primary);
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .login-logo-text {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .login-logo-tagline {
+      font-size: 13px;
+      color: #999;
+      font-style: italic;
+      margin: 6px 0 0 0;
+      letter-spacing: 0.5px;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--secondary);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .admin-container {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+      background: var(--bg-light);
+    }
+
+    .admin-sidebar {
+      background: linear-gradient(180deg, var(--primary) 0%, #1a1a1a 100%);
+      color: white;
+      padding: 24px 16px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 220px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .admin-logo {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .admin-logo-name {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .admin-logo-subtitle {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-menu-item {
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+      width: 100%;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 250ms ease;
+    }
+
+    .admin-menu-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(4px);
+    }
+
+    .admin-menu-item.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.3);
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: all 250ms ease;
+      box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+    }
+
+    .admin-main {
+      margin-left: 220px;
+      padding: 24px;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+      padding: 20px 24px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      border-top: 3px solid var(--primary);
+    }
+
+    .admin-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+      color: #000;
+    }
+
+    .admin-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .admin-header p {
+      margin: 8px 0 0 0;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .admin-menu-item {
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .admin-menu-item.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .admin-menu-item:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .admin-tab {
+      display: none;
+      background: transparent;
+    }
+    .admin-tab.active {
+      display: block;
+    }
+    .admin-content-section {
+      background: #fff;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-top: 16px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0;
+    }
+    .admin-table th {
+      background: #000;
+      color: #fff;
+      padding: 14px 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .admin-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 14px;
+      color: #333;
+    }
+    .admin-table tr:hover {
+      background: #f9f9f9;
+    }
+    .admin-btn {
+      padding: 8px 16px;
+      margin: 4px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 200ms ease;
+    }
+    .btn-edit {
+      background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(46, 125, 50, 0.3);
+    }
+    .btn-edit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4);
+    }
+    .btn-delete {
+      background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(211, 47, 47, 0.3);
+    }
+    .btn-delete:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
+    }
+    .btn-add {
+      background: linear-gradient(135deg, #000 0%, #222 100%);
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 250ms ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 200ms ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 200ms ease;
+    }
+    .modal.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: #fff;
+      padding: 28px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      animation: slideUp 250ms ease;
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .modal-header {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #000;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 12px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+      transition: color 200ms ease;
+    }
+    .modal-close:hover {
+      color: #333;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 200ms ease;
+    }
+    .modal-buttons button[type="submit"] {
+      background: linear-gradient(135deg, #000 0%, #222 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .modal-buttons button[type="submit"]:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .modal-buttons button[type="button"] {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .modal-buttons button[type="button"]:hover {
+      background: #d0d0d0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      border-left: 5px solid #d32f2f;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: all 300ms ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card h3 {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0;
+      color: #000;
+    }
+
+    .stat-card p {
+      font-size: 13px;
+      color: #888;
+      margin: 8px 0 0 0;
+      font-weight: 500;
+    }
+    @media (max-width: 768px) {
+      .admin-container {
+        grid-template-columns: 100%;
+      }
+      .admin-sidebar {
+        position: relative;
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        height: auto;
+        flex-direction: row;
+        padding: 12px;
+      }
+      .admin-logo { margin-bottom: 0; padding-bottom: 0; border-bottom: none; margin-right: 16px}
+      .admin-main {
+        margin-left: 0;
+        padding: 12px;
+      }
+      .admin-menu-item {
+        margin: 0 8px;
+        flex-shrink: 0;
+      }
+      .admin-table {
+        font-size: 12px;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body class="admin-body">
+  <!-- LOGIN FORM -->
+  <div class="admin-login" id="adminLogin">
+    <div class="login-card">
+      <div class="login-logo" style="margin-bottom: 32px;">
+        <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+      </div>
+      <div class="login-title">Admin Panel</div>
+      <div class="login-subtitle">Sign in to manage your store</div>
+      <form onsubmit="authenticateAdmin(event)">
+        <input type="password" id="adminPassword" class="login-input" placeholder="Enter admin password" required autofocus>
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+      <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #666; background: #f0f0f0; padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary)">
+        Demo password: <strong>Shivany@admin</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" style="display: none">
+  <div class="admin-container">
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="admin-logo" style="display: flex; align-items: center; justify-content: center; margin-bottom: 32px; height: 80px">
+        <img src="aarzah-logo.svg" alt="Aarzah" style="width: 100%; max-width: 120px; height: auto; object-fit: contain">
+      </div>
+      <button class="admin-menu-item active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+      <button class="admin-menu-item" onclick="switchTab('products')">📦 Products</button>
+      <button class="admin-menu-item" onclick="switchTab('coupons')">🎟️ Coupons</button>
+      <button class="admin-menu-item" onclick="switchTab('discounts')">💰 Discounts</button>
+      <button class="admin-menu-item" onclick="switchTab('orders')">📋 Orders</button>
+      <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+      <!-- DASHBOARD TAB -->
+      <div id="dashboard" class="admin-tab active">
+        <div class="admin-header">
+          <div>
+            <h1 style="margin: 0; font-size: 28px">Dashboard</h1>
+            <p style="margin: 4px 0 0 0; color: #999; font-size: 14px">Welcome to Aarzah Admin Panel</p>
+          </div>
+          <div style="text-align: right; font-size: 12px; color: #999" id="dashboardTime">Last updated: Now</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" style="border-left-color: #2e7d32">
+            <h3 id="totalOrders">0</h3>
+            <p>Total Orders</p>
+          </div>
+          <div class="stat-card" style="border-left-color: #1976d2">
+            <h3 id="totalProducts">0</h3>
+            <p>Products Listed</p>
+          </div>
+          <div class="stat-card" style="border-left-color: #f57c00">
+            <h3 id="activeCoupons">0</h3>
+            <p>Active Coupons</p>
+          </div>
+          <div class="stat-card" style="border-left-color: #c2185b">
+            <h3 id="totalRevenue">₹0</h3>
+            <p>Total Revenue</p>
+          </div>
+        </div>
+
+        <div class="admin-content-section">
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0 0 16px 0">Recent Orders</h2>
+          <div id="recentOrdersList" style="font-size: 14px; color: #666">No orders yet</div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS TAB -->
+      <div id="products" class="admin-tab">
+        <div class="admin-header">
+          <h1>Products Management</h1>
+          <button class="btn-add" onclick="openProductModal()">+ Add Product</button>
+        </div>
+
+        <div class="admin-content-section">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable">
+              <tr><td colspan="4" style="text-align: center; color: #999">No products added yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- COUPONS TAB -->
+      <div id="coupons" class="admin-tab">
+        <div class="admin-header">
+          <h1>Coupons Management</h1>
+          <button class="btn-add" onclick="openCouponModal()">+ Add Coupon</button>
+        </div>
+
+        <div class="admin-content-section">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Discount</th>
+                <th>Min Purchase</th>
+                <th>Expiry</th>
+                <th>Usage Limit</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="couponsTable">
+              <tr><td colspan="6" style="text-align: center; color: #999">No coupons added yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DISCOUNTS TAB -->
+      <div id="discounts" class="admin-tab">
+        <div class="admin-header">
+          <h1>Discounts Management</h1>
+          <button class="btn-add" onclick="openDiscountModal()">+ Add Discount</button>
+        </div>
+
+        <div class="admin-content-section">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Discount %</th>
+                <th>Original Price</th>
+                <th>Sale Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="discountsTable">
+              <tr><td colspan="5" style="text-align: center; color: #999">No discounts added yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div id="orders" class="admin-tab">
+        <div class="admin-header">
+          <h1 style="margin: 0; font-size: 20px">Orders</h1>
+        </div>
+
+        <div class="admin-content-section">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable">
+              <tr><td colspan="5" style="text-align: center; color: #999">No orders yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add/Edit Product</span>
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+      </div>
+      <form id="productForm">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="productDescription"></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+          <div class="form-group">
+            <label>Price (₹) *</label>
+            <input type="number" id="productPrice" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Stock Quantity *</label>
+            <input type="number" id="productStock" min="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="productCategory" required>
+            <option value="">Select Category</option>
+            <option value="Kurtis">Kurtis</option>
+            <option value="Suits">Suits</option>
+            <option value="Sarees">Sarees</option>
+            <option value="Dresses">Dresses</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="admin-btn" style="background: #999; color: #fff; flex: 1" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" class="admin-btn" style="background: #2e7d32; color: #fff; flex: 1">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- COUPON MODAL -->
+  <div id="couponModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add/Edit Coupon</span>
+        <button class="modal-close" onclick="closeCouponModal()">✕</button>
+      </div>
+      <form id="couponForm">
+        <div class="form-group">
+          <label>Coupon Code *</label>
+          <input type="text" id="couponCode" placeholder="e.g., SAVE20" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+          <div class="form-group">
+            <label>Discount (%) *</label>
+            <input type="number" id="couponDiscount" min="1" max="100" required>
+          </div>
+          <div class="form-group">
+            <label>Min Purchase (₹) *</label>
+            <input type="number" id="couponMinPurchase" min="0" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+          <div class="form-group">
+            <label>Usage Limit *</label>
+            <input type="number" id="couponUsageLimit" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Expiry Date *</label>
+            <input type="date" id="couponExpiry" required>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="admin-btn" style="background: #999; color: #fff; flex: 1" onclick="closeCouponModal()">Cancel</button>
+          <button type="submit" class="admin-btn" style="background: #2e7d32; color: #fff; flex: 1">Save Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DISCOUNT MODAL -->
+  <div id="discountModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add/Edit Discount</span>
+        <button class="modal-close" onclick="closeDiscountModal()">✕</button>
+      </div>
+      <form id="discountForm">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="discountProduct" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+          <div class="form-group">
+            <label>Original Price (₹) *</label>
+            <input type="number" id="discountOriginal" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Discount (%) *</label>
+            <input type="number" id="discountPercent" min="1" max="100" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Sale Price (₹)</label>
+          <input type="number" id="discountSalePrice" readonly style="background: #f5f5f5">
+        </div>
+        <script>
+          document.getElementById('discountOriginal').addEventListener('input', calculateSalePrice);
+          document.getElementById('discountPercent').addEventListener('input', calculateSalePrice);
+          function calculateSalePrice() {
+            const original = parseFloat(document.getElementById('discountOriginal').value) || 0;
+            const percent = parseFloat(document.getElementById('discountPercent').value) || 0;
+            const salePrice = Math.round(original - (original * percent / 100));
+            document.getElementById('discountSalePrice').value = salePrice;
+          }
+        </script>
+        <div class="modal-buttons">
+          <button type="button" class="admin-btn" style="background: #999; color: #fff; flex: 1" onclick="closeDiscountModal()">Cancel</button>
+          <button type="submit" class="admin-btn" style="background: #2e7d32; color: #fff; flex: 1">Save Discount</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Admin Authentication
+    const ADMIN_PASSWORD = 'Shivany@admin';
+
+    function authenticateAdmin(event) {
+      event.preventDefault();
+      const password = document.getElementById('adminPassword').value;
+      
+      if (password === ADMIN_PASSWORD) {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        sessionStorage.setItem('adminAuthenticated', 'true');
+        initAdmin();
+      } else {
+        alert('❌ Invalid password. Try: Shivany@admin');
+        document.getElementById('adminPassword').value = '';
+      }
+    }
+
+    function logoutAdmin() {
+      if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('adminAuthenticated');
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('adminLogin').style.display = 'flex';
+        document.getElementById('adminPassword').value = '';
+      }
+    }
+
+    function checkAuth() {
+      if (!sessionStorage.getItem('adminAuthenticated')) {
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('adminLogin').style.display = 'flex';
+      } else {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        initAdmin();
+      }
+    }
+
+    // Initialize admin on page load
+    window.addEventListener('DOMContentLoaded', checkAuth);
+    
+    // Also check on page load using another method
+    if(document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkAuth);
+    } else {
+      checkAuth();
+    }
+
+    // Switch between admin tabs
+    function switchTab(tabName) {
+      document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.admin-menu-item').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+
+      if(tabName === 'dashboard') loadDashboard();
+      if(tabName === 'products') loadProducts();
+      if(tabName === 'coupons') loadCoupons();
+      if(tabName === 'discounts') loadDiscounts();
+      if(tabName === 'orders') loadOrders();
+    }
+
+    function loadDashboard() {
+      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+      const products = JSON.parse(localStorage.getItem('aarzah_products') || '[]');
+      const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
+
+      document.getElementById('totalOrders').textContent = orders.length;
+      document.getElementById('totalProducts').textContent = products.length;
+      document.getElementById('activeCoupons').textContent = coupons.filter(c => new Date(c.expiryDate) > new Date()).length;
+      document.getElementById('totalRevenue').textContent = '₹' + orders.reduce((sum, o) => sum + o.total, 0);
+
+      let recentHTML = '';
+      orders.slice(-5).reverse().forEach(order => {
+        recentHTML += `
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e0e0e0">
+            <div>
+              <div style="font-weight: 600">${order.id}</div>
+              <div style="font-size: 12px; color: #999">${order.customer.fullName}</div>
+            </div>
+            <div style="text-align: right">
+              <div style="font-weight: 600">₹${order.total}</div>
+              <div style="font-size: 12px; color: #2e7d32">${order.status}</div>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('recentOrdersList').innerHTML = recentHTML || '<p style="color: #999">No orders yet</p>';
+    }
+
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('aarzah_products') || '[]');
+      let html = '';
+      if(products.length === 0) {
+        html = '<tr><td colspan="4" style="text-align: center; color: #999">No products added yet</td></tr>';
+      } else {
+        products.forEach((p, idx) => {
+          html += `
+            <tr>
+              <td><strong>${p.name}</strong></td>
+              <td>₹${p.price}</td>
+              <td>${p.stock}</td>
+              <td>
+                <button class="admin-btn btn-edit" onclick="editProduct(${idx})">Edit</button>
+                <button class="admin-btn btn-delete" onclick="deleteProduct(${idx})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('productsTable').innerHTML = html;
+    }
+
+    function loadCoupons() {
+      const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
+      let html = '';
+      if(coupons.length === 0) {
+        html = '<tr><td colspan="6" style="text-align: center; color: #999">No coupons added yet</td></tr>';
+      } else {
+        coupons.forEach((c, idx) => {
+          html += `
+            <tr>
+              <td><strong>${c.code}</strong></td>
+              <td>${c.discount}%</td>
+              <td>₹${c.minPurchase}</td>
+              <td>${new Date(c.expiryDate).toLocaleDateString('en-IN')}</td>
+              <td>${c.usageLimit}</td>
+              <td>
+                <button class="admin-btn btn-edit" onclick="editCoupon(${idx})">Edit</button>
+                <button class="admin-btn btn-delete" onclick="deleteCoupon(${idx})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('couponsTable').innerHTML = html;
+    }
+
+    function loadDiscounts() {
+      const discounts = JSON.parse(localStorage.getItem('aarzah_discounts') || '[]');
+      let html = '';
+      if(discounts.length === 0) {
+        html = '<tr><td colspan="5" style="text-align: center; color: #999">No discounts added yet</td></tr>';
+      } else {
+        discounts.forEach((d, idx) => {
+          html += `
+            <tr>
+              <td><strong>${d.product}</strong></td>
+              <td>${d.discountPercent}%</td>
+              <td>₹${d.originalPrice}</td>
+              <td>₹${d.salePrice}</td>
+              <td>
+                <button class="admin-btn btn-edit" onclick="editDiscount(${idx})">Edit</button>
+                <button class="admin-btn btn-delete" onclick="deleteDiscount(${idx})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('discountsTable').innerHTML = html;
+    }
+
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+      let html = '';
+      if(orders.length === 0) {
+        html = '<tr><td colspan="5" style="text-align: center; color: #999">No orders yet</td></tr>';
+      } else {
+        orders.forEach(o => {
+          html += `
+            <tr>
+              <td><strong>${o.id}</strong></td>
+              <td>${o.customer.fullName}</td>
+              <td>₹${o.total}</td>
+              <td><span style="background: #2e7d32; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px">${o.status}</span></td>
+              <td>${new Date(o.date).toLocaleDateString('en-IN')}</td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('ordersTable').innerHTML = html;
+    }
+
+    // Product functions
+    function openProductModal() {
+      document.getElementById('productForm').reset();
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    function deleteProduct(idx) {
+      if(confirm('Delete this product?')) {
+        const products = JSON.parse(localStorage.getItem('aarzah_products') || '[]');
+        products.splice(idx, 1);
+        localStorage.setItem('aarzah_products', JSON.stringify(products));
+        loadProducts();
+      }
+    }
+
+    function editProduct(idx) {
+      openProductModal();
+    }
+
+    // Coupon functions
+    function openCouponModal() {
+      document.getElementById('couponForm').reset();
+      document.getElementById('couponModal').classList.add('active');
+    }
+
+    function closeCouponModal() {
+      document.getElementById('couponModal').classList.remove('active');
+    }
+
+    function deleteCoupon(idx) {
+      if(confirm('Delete this coupon?')) {
+        const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
+        coupons.splice(idx, 1);
+        localStorage.setItem('aarzah_coupons', JSON.stringify(coupons));
+        loadCoupons();
+      }
+    }
+
+    function editCoupon(idx) {
+      openCouponModal();
+    }
+
+    // Discount functions
+    function openDiscountModal() {
+      document.getElementById('discountForm').reset();
+      document.getElementById('discountModal').classList.add('active');
+    }
+
+    function closeDiscountModal() {
+      document.getElementById('discountModal').classList.remove('active');
+    }
+
+    function deleteDiscount(idx) {
+      if(confirm('Delete this discount?')) {
+        const discounts = JSON.parse(localStorage.getItem('aarzah_discounts') || '[]');
+        discounts.splice(idx, 1);
+        localStorage.setItem('aarzah_discounts', JSON.stringify(discounts));
+        loadDiscounts();
+      }
+    }
+
+    function editDiscount(idx) {
+      openDiscountModal();
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuth();
+      loadDashboard();
+
+      // Product form
+      const productForm = document.getElementById('productForm');
+      if(productForm) {
+        productForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const product = {
+            name: document.getElementById('productName').value,
+            description: document.getElementById('productDescription').value,
+            price: parseInt(document.getElementById('productPrice').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            category: document.getElementById('productCategory').value,
+            image: document.getElementById('productImage').value || 'images/products/kurtis/embroidered-kurti.svg'
+          };
+          const products = JSON.parse(localStorage.getItem('aarzah_products') || '[]');
+          products.push(product);
+          localStorage.setItem('aarzah_products', JSON.stringify(products));
+          closeProductModal();
+          loadProducts();
+          alert('Product added successfully!');
+        });
+      }
+
+      // Coupon form
+      const couponForm = document.getElementById('couponForm');
+      if(couponForm) {
+        couponForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const coupon = {
+            code: document.getElementById('couponCode').value.toUpperCase(),
+            discount: parseInt(document.getElementById('couponDiscount').value),
+            minPurchase: parseInt(document.getElementById('couponMinPurchase').value),
+            usageLimit: parseInt(document.getElementById('couponUsageLimit').value),
+            expiryDate: document.getElementById('couponExpiry').value,
+            timesUsed: 0
+          };
+          const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
+          coupons.push(coupon);
+          localStorage.setItem('aarzah_coupons', JSON.stringify(coupons));
+          closeCouponModal();
+          loadCoupons();
+          alert('Coupon added successfully!');
+        });
+      }
+
+      // Discount form
+      const discountForm = document.getElementById('discountForm');
+      if(discountForm) {
+        discountForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const discount = {
+            product: document.getElementById('discountProduct').value,
+            originalPrice: parseInt(document.getElementById('discountOriginal').value),
+            discountPercent: parseInt(document.getElementById('discountPercent').value),
+            salePrice: parseInt(document.getElementById('discountSalePrice').value)
+          };
+          const discounts = JSON.parse(localStorage.getItem('aarzah_discounts') || '[]');
+          discounts.push(discount);
+          localStorage.setItem('aarzah_discounts', JSON.stringify(discounts));
+          closeDiscountModal();
+          loadDiscounts();
+          alert('Discount added successfully!');
+        });
+      }
+    });
+
+    // Initialize admin dashboard on login
+    function initAdmin() {
+      loadDashboard();
+    }
+  </script>
+</body>
+</html>

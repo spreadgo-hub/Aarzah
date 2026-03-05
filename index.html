@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <title>Aarzah - Everyday Ethnic Wear</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- MENU OVERLAY -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- SLIDE-IN MENU -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <button class="close-btn" id="closeMenu">✕</button>
+    </div>
+    
+    <ul class="menu-categories">
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Kurtis & Kurtas</button>
+        <ul class="submenu">
+          <li><a href="#">All Kurtis</a></li>
+          <li><a href="#">Cotton Kurtis</a></li>
+          <li><a href="#">Silk Kurtis</a></li>
+          <li><a href="#">Printed Kurtis</a></li>
+          <li><a href="#">Embroidered Kurtis</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Suits & Sets</button>
+        <ul class="submenu">
+          <li><a href="#">Salwar Suits</a></li>
+          <li><a href="#">Palazzo Suits</a></li>
+          <li><a href="#">Cotton Suits</a></li>
+          <li><a href="#">Silk Suits</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Sarees</button>
+        <ul class="submenu">
+          <li><a href="#">All Sarees</a></li>
+          <li><a href="#">Cotton Sarees</a></li>
+          <li><a href="#">Silk Sarees</a></li>
+          <li><a href="#">Printed Sarees</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Dresses</button>
+        <ul class="submenu">
+          <li><a href="#">Casual Dresses</a></li>
+          <li><a href="#">Party Dresses</a></li>
+          <li><a href="#">Printed Dresses</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Co-ord Sets</button>
+        <ul class="submenu">
+          <li><a href="#">Women Co-ords</a></li>
+          <li><a href="#">Printed Co-ords</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="menu-divider"></div>
+
+    <div class="menu-support">
+      <a href="order-tracking.html" class="menu-link">📍 Order Tracking</a>
+      <a href="returns.html" class="menu-link">🔄 Return / Exchange</a>
+      <a href="contact.html" class="menu-link">📞 Contact Us</a>
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <a href="login.html" class="menu-login-btn">Log In / Sign Up</a>
+
+    <div class="menu-footer">
+      <p class="menu-footer-text">Follow us</p>
+      <div class="menu-socials">
+        <a href="https://www.instagram.com/aarzahofficial/" title="Instagram" class="social-link" target="_blank" rel="noopener noreferrer">📷 Instagram</a>
+        <a href="https://www.facebook.com/people/Aarzah/61560892677244/" title="Facebook" class="social-link" target="_blank" rel="noopener noreferrer">👍 Facebook</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header-content">
+      <button class="header-btn" id="menuBtn">☰</button>
+      <div class="header-logo" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin: 0 4px; flex-shrink: 0;">
+        <img src="aarzah-logo.svg" alt="Aarzah" style="width: 100%; height: 100%; object-fit: contain; padding: 4px;">
+      </div>
+      <div class="header-actions">
+        <a href="search.html" class="header-btn">🔍</a>
+        <a href="login.html" class="header-btn">👤</a>
+        <a href="checkout.html" class="header-btn" id="cartBtn">🛍️<span class="cart-badge" id="cartBadge">0</span></a>
+      </div>
+    </div>
+    
+    <!-- ANNOUNCEMENT SCROLLER -->
+    <div class="announcement">
+      <div class="announcement-slider">
+        <span>📦 Free shipping on orders above ₹499</span>
+        <span>🔄 Easy returns within 14 days</span>
+        <span>✓ 100% Authentic Products</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- CATEGORY SCROLL -->
+    <section class="categories-scroll">
+      <div class="categories-container">
+        <div class="category-item" data-category="kurtis">
+          <div class="category-icon">👗</div>
+          <div class="category-name">Kurtis</div>
+        </div>
+        <div class="category-item" data-category="suits">
+          <div class="category-icon">👔</div>
+          <div class="category-name">Suits</div>
+        </div>
+        <div class="category-item" data-category="sarees">
+          <div class="category-icon">🎀</div>
+          <div class="category-name">Sarees</div>
+        </div>
+        <div class="category-item" data-category="dresses">
+          <div class="category-icon">👚</div>
+          <div class="category-name">Dresses</div>
+        </div>
+        <div class="category-item" data-category="accessories">
+          <div class="category-icon">✨</div>
+          <div class="category-name">Accessories</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+      <img src="images/banners/summer-collection.svg" alt="Summer Collection">
+      <div class="hero-content">
+        <h1>Summer Collection</h1>
+        <p>Upto 50% Off</p>
+      </div>
+    </section>
+
+    <!-- TRENDING NOW SECTION -->
+    <section class="products-section">
+      <div class="section-header">
+        <h2>Trending Now</h2>
+        <a href="#" class="view-all">View All →</a>
+      </div>
+      <div class="products-grid">
+        <div class="product-card">
+          <a href="product-detail.html?id=1" class="product-image-link">
+            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Embroidered Kurti">
+            <span class="sale-badge">-20%</span>
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Embroidered Cotton Kurti</h3>
+            <div class="product-price">
+              <span class="price">₹649</span>
+              <span class="original-price">₹799</span>
+            </div>
+            <div class="product-rating">★★★★★ <span class="rating-count">(124)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Embroidered Cotton Kurti', 649, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+          <a href="product-detail.html?id=2" class="product-image-link">
+            <img src="images/products/sarees/printed-saree.svg" alt="Printed Saree">
+            <span class="sale-badge">-15%</span>
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Printed Saree with Blouse</h3>
+            <div class="product-price">
+              <span class="price">₹1,299</span>
+              <span class="original-price">₹1,499</span>
+            </div>
+            <div class="product-rating">★★★★☆ <span class="rating-count">(98)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Printed Saree with Blouse', 1299, 'images/products/sarees/printed-saree.svg')">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+          <a href="product-detail.html?id=3" class="product-image-link">
+            <img src="images/products/suits/palazzo-suit.svg" alt="Palazzo Suit">
+            <span class="sale-badge">-10%</span>
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Palazzo Suit Set</h3>
+            <div class="product-price">
+              <span class="price">₹899</span>
+              <span class="original-price">₹999</span>
+            </div>
+            <div class="product-rating">★★★★★ <span class="rating-count">(76)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Palazzo Suit Set', 899, 'images/products/suits/palazzo-suit.svg')">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+          <a href="product-detail.html?id=4" class="product-image-link">
+            <img src="images/products/dresses/casual-dress.svg" alt="Casual Dress">
+            <span class="sale-badge">-10%</span>
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Cotton Casual Dress</h3>
+            <div class="product-price">
+              <span class="price">₹449</span>
+              <span class="original-price">₹499</span>
+            </div>
+            <div class="product-rating">★★★★★ <span class="rating-count">(89)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Cotton Casual Dress', 449, 'images/products/dresses/casual-dress.svg')">Add to Cart</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW ARRIVALS SECTION -->
+    <section class="products-section">
+      <div class="section-header">
+        <h2>New Arrivals</h2>
+        <a href="#" class="view-all">View All →</a>
+      </div>
+      <div class="products-grid">
+        <div class="product-card">
+          <a href="product-detail.html?id=5" class="product-image-link">
+            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Designer Kurti">
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Designer Silk Kurti</h3>
+            <div class="product-price">
+              <span class="price">₹1,599</span>
+            </div>
+            <div class="product-rating">★★★★★ <span class="rating-count">(42)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Designer Silk Kurti', 1599, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+          <a href="product-detail.html?id=6" class="product-image-link">
+            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Kurta Set">
+          </a>
+          <div class="product-details">
+            <h3 class="product-name">Printed Kurta with Pants</h3>
+            <div class="product-price">
+              <span class="price">₹799</span>
+            </div>
+            <div class="product-rating">★★★★☆ <span class="rating-count">(67)</span></div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart('Printed Kurta with Pants', 799, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 70px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 250px; height: auto; margin-bottom: 20px;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active" style="text-decoration: none">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="order-tracking.html" class="nav-item" style="text-decoration: none">
+      <span class="nav-icon">📦</span>
+      <span class="nav-label">Track</span>
+    </a>
+    <a href="checkout.html" class="nav-item" style="text-decoration: none">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" style="text-decoration: none" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>

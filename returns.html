@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Return / Exchange - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    .returns-container {
+      padding: 16px;
+      min-height: calc(100vh - 176px);
+    }
+
+    .returns-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .policy-box {
+      background: #f0f4ff;
+      border-left: 4px solid #1976d2;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .policy-title {
+      font-weight: 700;
+      color: #1976d2;
+      margin-bottom: 8px;
+    }
+
+    .policy-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .policy-list li {
+      padding: 4px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .policy-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #2e7d32;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    .contact-info {
+      background: var(--bg-light);
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .contact-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-details {
+      flex: 1;
+    }
+
+    .contact-label {
+      font-size: 12px;
+      color: var(--secondary);
+      margin-bottom: 2px;
+    }
+
+    .contact-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <button class="header-btn" id="menuBtn">☰</button>
+      <div class="header-logo">Aarzah</div>
+      <a href="checkout.html" class="header-btn">🛍️<span class="cart-badge" id="cartBadge">0</span></a>
+    </div>
+    <div class="announcement">
+      <div class="announcement-slider">
+        <span>📦 Free shipping on orders above ₹499</span>
+        <span>🔄 Easy returns within 14 days</span>
+        <span>✓ 100% Authentic Products</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENU OVERLAY -->
+  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+  <!-- SIDE MENU -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <button class="close-btn" id="closeMenu">✕</button>
+    </div>
+    <ul class="menu-categories">
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Kurtis & Kurtas</button>
+        <ul class="submenu">
+          <li><a href="#">All Kurtis</a></li>
+          <li><a href="#">Cotton Kurtis</a></li>
+          <li><a href="#">Silk Kurtis</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">Suits & Sets</button>
+        <ul class="submenu">
+          <li><a href="#">Salwar Suits</a></li>
+          <li><a href="#">Palazzo Suits</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="menu-divider"></div>
+    <div class="menu-support">
+      <a href="order-tracking.html" class="menu-link">📍 Order Tracking</a>
+      <a href="returns.html" class="menu-link">🔄 Return / Exchange</a>
+      <a href="contact.html" class="menu-link">📞 Contact Us</a>
+    </div>
+    <div class="menu-divider"></div>
+    <a href="login.html" class="menu-login-btn">Log In / Sign Up</a>
+  </nav>
+
+  <main class="returns-container">
+    <div class="returns-card">
+      <h1 style="font-size: 22px; font-weight: 700; margin-bottom: 4px; color: var(--primary)">Return & Exchange</h1>
+      <p style="font-size: 13px; color: var(--secondary); margin-bottom: 16px">We make returns easy! Initiate yours within 14 days</p>
+
+      <div class="policy-box">
+        <div class="policy-title">📋 Return Policy</div>
+        <ul class="policy-list">
+          <li>Valid for 14 days from delivery</li>
+          <li>Items must be unused and in original condition</li>
+          <li>We cover return shipping</li>
+          <li>Refund within 5-7 business days</li>
+          <li>No questions asked policy</li>
+        </ul>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage">
+        ✓ Request submitted successfully! We'll contact you within 24 hours.
+      </div>
+
+      <form onsubmit="submitReturnRequest(event)">
+        <div class="form-group">
+          <label class="form-label">Order ID *</label>
+          <input type="text" id="returnOrderId" class="form-input" placeholder="e.g., ORD1234567890" required>
+          <small style="font-size: 12px; color: var(--secondary); display: block; margin-top: 6px">Your order ID from the confirmation email</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Reason for Return/Exchange *</label>
+          <select id="returnReason" class="form-select" required>
+            <option value="">Select a reason</option>
+            <option value="defective">Product is Defective</option>
+            <option value="wrong-color">Wrong Color/Size Received</option>
+            <option value="not-as-described">Not As Described</option>
+            <option value="damaged">Damaged in Transit</option>
+            <option value="changed-mind">Changed My Mind</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Describe Your Issue *</label>
+          <textarea id="returnDescription" class="form-textarea" placeholder="Please tell us more about your return request..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Resolution *</label>
+          <div style="display: grid; gap: 8px">
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer">
+              <input type="radio" name="resolution" value="return" checked>
+              <span style="font-size: 13px">Return & Full Refund</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer">
+              <input type="radio" name="resolution" value="exchange">
+              <span style="font-size: 13px">Exchange with Different Size/Color</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer">
+              <input type="radio" name="resolution" value="store-credit">
+              <span style="font-size: 13px">Store Credit Instead of Refund</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Phone Number *</label>
+          <input type="tel" id="returnPhone" class="form-input" placeholder="Your 10-digit mobile number" maxlength="10" pattern="[0-9]{10}" required>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Return Request</button>
+      </form>
+
+      <div class="section-divider"></div>
+
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">How It Works</h2>
+      <div style="display: grid; gap: 12px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 32px; height: 32px; background: #d32f2f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0">1</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--primary)">Fill the Form</div>
+            <div style="font-size: 12px; color: var(--secondary); margin-top: 2px">Tell us about your return/exchange request</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 32px; height: 32px; background: #d32f2f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0">2</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--primary)">Pickup is Arranged</div>
+            <div style="font-size: 12px; color: var(--secondary); margin-top: 2px">We'll contact you to arrange pickup within 24 hours</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 32px; height: 32px; background: #d32f2f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0">3</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--primary)">Item Received & Verified</div>
+            <div style="font-size: 12px; color: var(--secondary); margin-top: 2px">Your item is checked and verified at our facility</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 32px; height: 32px; background: #d32f2f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0">4</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--primary)">Refund / Exchange</div>
+            <div style="font-size: 12px; color: var(--secondary); margin-top: 2px">Your refund is processed or exchange item is shipped</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">Questions?</h2>
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div class="contact-details">
+            <div class="contact-label">Chat with us</div>
+            <a href="https://wa.me/919999999999" style="text-decoration: none">
+              <div class="contact-value">WhatsApp</div>
+            </a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-details">
+            <div class="contact-label">Email us</div>
+            <a href="mailto:returns@aarzah.com" style="text-decoration: none">
+              <div class="contact-value">returns@aarzah.com</div>
+            </a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">☎️</div>
+          <div class="contact-details">
+            <div class="contact-label">Call us</div>
+            <a href="tel:+919999999999" style="text-decoration: none">
+              <div class="contact-value">+91 9999 999 999</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Search</span>
+    </a>
+    <a href="checkout.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <script src="script.js"></script>
+  <script>
+    function submitReturnRequest(event) {
+      event.preventDefault();
+
+      const orderId = document.getElementById('returnOrderId').value.trim().toUpperCase();
+      const reason = document.getElementById('returnReason').value;
+      const description = document.getElementById('returnDescription').value;
+      const resolution = document.querySelector('input[name="resolution"]:checked').value;
+      const phone = document.getElementById('returnPhone').value;
+
+      const errorMsg = document.getElementById('errorMessage');
+      const successMsg = document.getElementById('successMessage');
+
+      errorMsg.classList.remove('show');
+      successMsg.classList.remove('show');
+
+      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+      const order = orders.find(o => o.id === orderId);
+
+      if (!order) {
+        errorMsg.textContent = 'Order not found. Please check your Order ID';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      // Check if order is within 14 days
+      const orderDate = new Date(order.date);
+      const today = new Date();
+      const daysDiff = Math.floor((today - orderDate) / (1000 * 60 * 60 * 24));
+
+      if (daysDiff > 14) {
+        errorMsg.textContent = 'This order is outside the 14-day return window. Contact support for exceptions.';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      // Save return request
+      const returnRequest = {
+        id: 'RET' + Date.now(),
+        orderId,
+        reason,
+        description,
+        resolution,
+        phone,
+        status: 'Pending',
+        date: new Date().toISOString()
+      };
+
+      const requests = JSON.parse(localStorage.getItem('aarzah_return_requests') || '[]');
+      requests.push(returnRequest);
+      localStorage.setItem('aarzah_return_requests', JSON.stringify(requests));
+
+      successMsg.classList.add('show');
+      document.querySelector('form').reset();
+
+      setTimeout(() => {
+        successMsg.classList.remove('show');
+      }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMenu();
+      cart.updateBadge();
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 80px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+</body>
+</html>

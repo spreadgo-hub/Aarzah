@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Checkout - Aarzah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <span style="font-weight:700;font-size:18px">Checkout</span>
+      <div style="width:24px"></div>
+    </div>
+  </header>
+
+  <main style="padding: 16px; padding-bottom: 120px">
+    <!-- ORDER SUMMARY -->
+    <section class="checkout-section">
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">Order Summary</h2>
+      <div id="cartSummary" style="background: var(--bg-light); border-radius: 8px; padding: 12px; max-height: 250px; overflow-y: auto"></div>
+    </section>
+
+    <!-- DELIVERY ADDRESS -->
+    <section class="checkout-section">
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">Delivery Address</h2>
+      <form id="addressForm" style="background: white; border-radius: 8px">
+        <div class="form-group">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Full Name *</label>
+          <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Phone Number *</label>
+          <div style="display: flex; gap: 8px">
+            <input type="text" value="+91" style="width: 60px; padding: 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-light); font-size: 14px" readonly>
+            <input type="tel" id="phoneNumber" class="form-input" placeholder="10-digit number" maxlength="10" pattern="[0-9]{10}" required style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Email (Optional)</label>
+          <input type="email" id="email" class="form-input" placeholder="your.email@example.com" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Address Line 1 *</label>
+          <input type="text" id="address1" class="form-input" placeholder="House No., Building Name" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Address Line 2 (Optional)</label>
+          <input type="text" id="address2" class="form-input" placeholder="Road name, Area, Colony" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <div class="form-group">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">City *</label>
+            <input type="text" id="city" class="form-input" placeholder="Mumbai, Delhi" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          </div>
+          <div class="form-group">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Pin Code *</label>
+            <input type="text" id="pincode" class="form-input" placeholder="6-digit PIN" maxlength="6" pattern="[0-9]{6}" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <div class="form-group">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">State *</label>
+            <select id="state" class="form-input" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+              <option value="">Select State</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Delhi">Delhi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; color: var(--primary)">Country</label>
+            <input type="text" class="form-input" value="India" readonly style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: var(--bg-light)">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 12px">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer">
+            <input type="checkbox" id="defaultAddress" checked>
+            <span style="color: var(--primary)">Save this address as default</span>
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <!-- COUPON CODE -->
+    <section class="checkout-section">
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">Promo Code</h2>
+      <div style="display: flex; gap: 8px">
+        <input type="text" id="couponCode" class="form-input" placeholder="Enter coupon code" style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        <button onclick="applyCoupon()" style="padding: 10px 16px; background: var(--primary); color: #fff; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; white-space: nowrap">Apply</button>
+      </div>
+      <div id="couponMessage" style="font-size: 12px; margin-top: 8px"></div>
+    </section>
+
+    <!-- PAYMENT METHOD -->
+    <section class="checkout-section">
+      <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary)">Payment Method</h2>
+      <div class="payment-options">
+        <label class="payment-option" style="display: flex; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; background: white">
+          <input type="radio" name="payment" value="card" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary)">
+          <span style="font-size: 14px; color: var(--primary); margin-left: 12px">💳 Debit / Credit Card</span>
+        </label>
+        <label class="payment-option" style="display: flex; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; background: white">
+          <input type="radio" name="payment" value="upi" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary)">
+          <span style="font-size: 14px; color: var(--primary); margin-left: 12px">📱 UPI (Google Pay, PhonePe)</span>
+        </label>
+        <label class="payment-option" style="display: flex; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: white">
+          <input type="radio" name="payment" value="wallet" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary)">
+          <span style="font-size: 14px; color: var(--primary); margin-left: 12px">🏦 Wallet</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ORDER TOTAL -->
+    <section class="checkout-section" style="background: var(--bg-light); border-radius: 8px">
+      <div class="price-breakdown">
+        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: var(--secondary)">
+          <span>Subtotal</span>
+          <span id="subtotal">₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: var(--secondary)">
+          <span>Discount</span>
+          <span id="discount" style="color: #2e7d32">-₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; color: var(--secondary)">
+          <span>Shipping</span>
+          <span id="shipping">Free</span>
+        </div>
+        <hr style="margin: 8px 0; border: none; border-top: 2px solid white">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; color: var(--primary)">
+          <span>Total Amount</span>
+          <span id="totalAmount">₹0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMS -->
+    <div style="font-size: 11px; color: #999; margin-top: 16px; text-align: center; line-height: 1.6">
+      By placing your order, you agree to our Terms & Conditions and Privacy Policy. 
+      <span style="color: #d32f2f">Your personal information is secure and encrypted.</span>
+    </div>
+  </main>
+
+  <!-- PLACE ORDER BUTTON (STICKY) -->
+  <div style="position: fixed; bottom: 64px; left: 0; right: 0; padding: 12px 16px; background: white; border-top: 1px solid var(--border); z-index: 80; box-shadow: 0 -2px 8px rgba(0,0,0,0.08)">
+    <button class="place-order-btn" onclick="initiatePayment()" style="width: 100%; padding: 16px 16px; background: linear-gradient(135deg, var(--primary) 0%, #b71c1c 100%); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 200ms ease; box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3)">Proceed to Payment 💳</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item" style="text-decoration: none">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="order-tracking.html" class="nav-item" style="text-decoration: none">
+      <span class="nav-icon">📦</span>
+      <span class="nav-label">Track</span>
+    </a>
+    <a href="checkout.html" class="nav-item active" style="text-decoration: none">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="https://wa.me/919999999999" class="nav-item" style="text-decoration: none" target="_blank" rel="noopener noreferrer">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Chat</span>
+    </a>
+  </nav>
+
+  <!-- SIDE MENU -->
+  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <button class="close-btn" id="closeMenu">✕</button>
+    </div>
+    <ul class="menu-categories">
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">👗 Women's Ethnic</button>
+        <ul class="submenu">
+          <li><a href="#">Kurtis</a></li>
+          <li><a href="#">Suits</a></li>
+          <li><a href="#">Sarees</a></li>
+          <li><a href="#">Dresses</a></li>
+        </ul>
+      </li>
+      <li class="menu-category">
+        <button class="menu-category-btn expandable">📿 Accessories</button>
+        <ul class="submenu">
+          <li><a href="#">Jewelry</a></li>
+          <li><a href="#">Bags</a></li>
+          <li><a href="#">Belts</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="menu-divider" style="margin: 16px 0"></div>
+    <a href="order-tracking.html" style="display: block; padding: 12px 0; color: var(--secondary); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--border)">📍 Order Tracking</a>
+    <a href="returns.html" style="display: block; padding: 12px 0; color: var(--secondary); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--border)">🔄 Return / Exchange</a>
+    <a href="contact.html" style="display: block; padding: 12px 0; color: var(--secondary); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--border)">📞 Contact Us</a>
+    <div class="menu-divider" style="margin: 16px 0"></div>
+    <a href="admin.html" style="display: block; padding: 12px; background: var(--primary); color: #fff; border-radius: 4px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px">Admin Panel</a>
+  </nav>
+
+  <!-- RAZORPAY SCRIPT -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <script src="script.js"></script>
+  <script>
+    // Razorpay Configurations
+    const RAZORPAY_CONFIG = {
+      keyId: 'rzp_test_1DP5mmOlF5G0m9',  // Replace with your test key
+      keySecret: 'your_secret_key_here'   // Only for backend
+    };
+
+    // Payment event logger
+    window.logPaymentEvent = function(eventType, data) {
+      const log = {
+        timestamp: new Date().toISOString(),
+        eventType: eventType,
+        data: data
+      };
+      console.log('[PAYMENT] ' + eventType + ':', log);
+      
+      // Store in sessionStorage for debugging
+      const paymentLogs = JSON.parse(sessionStorage.getItem('paymentLogs') || '[]');
+      paymentLogs.push(log);
+      if(paymentLogs.length > 10) paymentLogs.shift(); // Keep only last 10 logs
+      sessionStorage.setItem('paymentLogs', JSON.stringify(paymentLogs));
+    };
+
+    // Initialize checkout page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in - if not, redirect to login
+      const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
+      const isLoggedIn = (user && user.phone) || sessionStorage.getItem('userLoggedIn');
+      
+      if (!isLoggedIn) {
+        alert('Please login to proceed with checkout');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      initCheckout();
+      loadSavedAddress();
+    });
+
+    function loadSavedAddress() {
+      const savedUser = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
+      if(savedUser.fullName) {
+        document.getElementById('fullName').value = savedUser.fullName;
+        document.getElementById('phoneNumber').value = savedUser.phone || '';
+        document.getElementById('email').value = savedUser.email || '';
+        document.getElementById('address1').value = savedUser.address1 || '';
+        document.getElementById('address2').value = savedUser.address2 || '';
+        document.getElementById('city').value = savedUser.city || '';
+        document.getElementById('state').value = savedUser.state || '';
+        document.getElementById('pincode').value = savedUser.pincode || '';
+      }
+    }
+
+    function applyCoupon() {
+      const couponCode = document.getElementById('couponCode').value.trim().toUpperCase();
+      const coupons = JSON.parse(localStorage.getItem('aarzah_coupons') || '[]');
+      const coupon = coupons.find(c => c.code === couponCode);
+      
+      if(!couponCode) {
+        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Please enter a coupon code</span>';
+        return;
+      }
+      
+      if(!coupon) {
+        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Invalid coupon code</span>';
+        return;
+      }
+      
+      const now = new Date();
+      if(coupon.expiryDate && new Date(coupon.expiryDate) < now) {
+        document.getElementById('couponMessage').innerHTML = '<span style="color:#d32f2f">Coupon has expired</span>';
+        return;
+      }
+      
+      localStorage.setItem('aarzah_applied_coupon', JSON.stringify(coupon));
+      document.getElementById('couponMessage').innerHTML = `<span style="color:#2e7d32">✓ Coupon applied: ${coupon.discount}% off</span>`;
+      initCheckout();
+    }
+
+    function initiatePayment() {
+      window.logPaymentEvent('PAYMENT_INITIATED', { timestamp: new Date().toISOString() });
+
+      const form = document.getElementById('addressForm');
+      
+      // Validate form
+      if(!form.checkValidity()) {
+        window.logPaymentEvent('FORM_VALIDATION_FAILED', { error: 'Form validation failed' });
+        alert('❌ Please fill all required fields correctly');
+        form.reportValidity();
+        return;
+      }
+
+      // Validate cart
+      const cart = JSON.parse(localStorage.getItem('aarzah_cart') || '[]');
+      if(!cart || cart.length === 0) {
+        alert('❌ Your cart is empty. Please add items before checkout.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Get payment method
+      const paymentMethodRadio = document.querySelector('input[name="payment"]:checked');
+      if(!paymentMethodRadio) {
+        alert('❌ Please select a payment method');
+        return;
+      }
+
+      const paymentMethod = paymentMethodRadio.value;
+      const fullName = document.getElementById('fullName').value.trim();
+      const phoneNumber = document.getElementById('phoneNumber').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const address1 = document.getElementById('address1').value.trim();
+      const address2 = document.getElementById('address2').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value;
+      const pincode = document.getElementById('pincode').value.trim();
+
+      // Additional validation
+      if(phoneNumber.length !== 10) {
+        alert('❌ Please enter a valid 10-digit phone number');
+        return;
+      }
+
+      if(pincode.length !== 6) {
+        alert('❌ Please enter a valid 6-digit PIN code');
+        return;
+      }
+
+      if(!state || state === 'Select State') {
+        alert('❌ Please select a state');
+        return;
+      }
+
+      // Save address to localStorage
+      const user = JSON.parse(localStorage.getItem('aarzah_user') || '{}');
+      user.fullName = fullName;
+      user.phone = phoneNumber;
+      user.email = email;
+      user.address1 = address1;
+      user.address2 = address2;
+      user.city = city;
+      user.state = state;
+      user.pincode = pincode;
+      user.lastAddressUpdate = new Date().toISOString();
+      localStorage.setItem('aarzah_user', JSON.stringify(user));
+
+      const appliedCoupon = JSON.parse(localStorage.getItem('aarzah_applied_coupon') || '{}');
+      
+      // Calculate totals
+      let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      let discount = 0;
+      let shippingFee = 0;
+      
+      if(appliedCoupon.discount) {
+        discount = Math.floor(subtotal * appliedCoupon.discount / 100);
+      }
+
+      // Add shipping fee (free for orders over 500)
+      if(subtotal < 500) {
+        shippingFee = 50;
+      }
+
+      const total = subtotal - discount + shippingFee;
+
+      // Validate total
+      if(total <= 0) {
+        alert('❌ Invalid order amount. Please review your cart.');
+        return;
+      }
+
+      // Create order object
+      const order = {
+        id: 'ORD' + Date.now(),
+        date: new Date().toISOString(),
+        customer: { 
+          fullName, 
+          phoneNumber: '+91' + phoneNumber,
+          email, 
+          address: `${address1}${address2 ? ', ' + address2 : ''}, ${city}, ${state} ${pincode}`
+        },
+        items: cart,
+        subtotal: subtotal,
+        discount,
+        shippingFee,
+        total: total,
+        paymentMethod: paymentMethod,
+        paymentStatus: 'Pending',
+        status: 'Processing',
+        couponCode: appliedCoupon.code || null,
+        createdAt: new Date().toISOString()
+      };
+
+      // Initiate payment based on method
+      if(paymentMethod === 'card' || paymentMethod === 'upi' || paymentMethod === 'wallet') {
+        initiateRazorpayPayment(order);
+      } else {
+        alert('❌ Invalid payment method selected');
+      }
+    }
+
+    function initiateRazorpayPayment(order) {
+      window.logPaymentEvent('RAZORPAY_INIT', { orderId: order.id, amount: order.total });
+
+      const options = {
+        key: RAZORPAY_CONFIG.keyId,
+        amount: Math.round(order.total * 100),  // Amount in paise
+        currency: 'INR',
+        name: 'Aarzah',
+        description: 'Premium Ethnic Wear - Order ' + order.id,
+        image: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="60" font-size="80" font-weight="bold" text-anchor="middle" fill="%23d32f2f">A</text></svg>',
+        
+        // Customer details
+        prefill: {
+          name: order.customer.fullName,
+          email: order.customer.email || '',
+          contact: order.customer.phoneNumber.replace(/\D/g, '')  // Only digits
+        },
+        
+        // Notes to attach to payment
+        notes: {
+          orderId: order.id,
+          email: order.customer.email || '',
+          phone: order.customer.phoneNumber,
+          address: order.customer.address
+        },
+        
+        // Theme
+        theme: {
+          color: '#d32f2f'
+        }
+      };
+
+      try {
+        const rzp = new Razorpay(options);
+        
+        // Handle successful payment
+        rzp.on('payment.success', function(response) {
+          window.logPaymentEvent('PAYMENT_SUCCESS', { paymentId: response.razorpay_payment_id });
+          console.log('✓ Payment successful:', response);
+          // Payment successful
+          order.paymentStatus = 'Completed';
+          order.paymentId = response.razorpay_payment_id;
+          completeOrder(order);
+        });
+        
+        // Handle failed payment
+        rzp.on('payment.failed', function(response) {
+          window.logPaymentEvent('PAYMENT_FAILED', { error: response.error });
+          console.error('✗ Payment failed:', response.error);
+          const errorMsg = response.error.description || 'Unknown error';
+          alert('❌ Payment Failed!\n\nCode: ' + response.error.code + '\nMessage: ' + errorMsg + '\n\nPlease try again with a different payment method.');
+        });
+        
+        // Open Razorpay checkout
+        rzp.open();
+      } catch(error) {
+        window.logPaymentEvent('RAZORPAY_ERROR', { error: error.message });
+        console.error('Razorpay initialization error:', error);
+        alert('❌ Payment system error!\n\nThe payment gateway could not be initialized. Please try again later or contact customer support.');
+      }
+    }
+
+    function completeOrder(order) {
+      // Validate order
+      if(!order || !order.id) {
+        window.logPaymentEvent('ORDER_COMPLETION_FAILED', { error: 'Invalid order object' });
+        alert('Order creation failed. Please try again.');
+        return;
+      }
+
+      // Update order status
+      order.status = 'Confirmed';
+      order.processedAt = new Date().toISOString();
+
+      // Save order to localStorage
+      const orders = JSON.parse(localStorage.getItem('aarzah_orders') || '[]');
+      orders.push(order);
+      localStorage.setItem('aarzah_orders', JSON.stringify(orders));
+
+      // Save order confirmation data
+      sessionStorage.setItem('lastOrderId', order.id);
+      sessionStorage.setItem('lastOrderTotal', order.total);
+
+      // Clear cart and coupon
+      localStorage.removeItem('aarzah_cart');
+      localStorage.removeItem('aarzah_applied_coupon');
+      
+      // Update cart badge
+      if(typeof updateCartBadge === 'function') {
+        updateCartBadge();
+      }
+
+      // Log successful order completion
+      window.logPaymentEvent('ORDER_COMPLETED', { orderId: order.id, amount: order.total });
+
+      // Show success message
+      alert('✓ Order placed successfully!\n\nOrder ID: ' + order.id + '\nAmount: ₹' + order.total);
+
+      // Redirect to confirmation page with delay
+      setTimeout(function() {
+        window.location.href = 'order-confirmation.html?orderId=' + order.id;
+      }, 500);
+    }
+  </script>
+
+  <!-- FOOTER -->
+  <footer style="background: #f8f5f0; padding: 32px 16px; text-align: center; margin-bottom: 20px;">
+    <div style="max-width: 300px; margin: 0 auto; padding: 20px 0;">
+      <img src="aarzah-logo.svg" alt="Aarzah Logo" style="width: 100%; max-width: 200px; height: auto;">
+    </div>
+    <p style="color: #999; font-size: 12px; margin: 8px 0;">© 2026 Aarzah. All rights reserved.</p>
+    <p style="color: #999; font-size: 11px;">Aapki Aarzoo, hamari pehchaan</p>
+  </footer>
+</body>
+</html>

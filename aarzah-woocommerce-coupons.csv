@@ -1,0 +1,6 @@
+Code,Discount Type,Coupon Amount,Allow Free Shipping,Expiry Date,Minimum Spend,Maximum Spend,Individual Use Only,Usage Limit Per Coupon,Limit Usage To X Items,Usage Limit Per User
+SAVE20,Percent,20,,2024-12-31,1000,,0,,
+FLAT50,Fixed Cart,50,,2024-12-31,500,,0,,
+WELCOME10,Percent,10,,2024-06-30,100,,1,,
+SUMMER15,Percent,15,,2024-08-31,200,,0,,
+FREESHIP,Fixed Cart,50,,2024-12-31,499,,0,,
