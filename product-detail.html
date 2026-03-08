@@ -7,6 +7,7 @@
   <title>Product Details - Aarzah</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
+  <script src="products-data.js"></script>
 </head>
 <body>
   <!-- HEADER -->
@@ -57,10 +58,8 @@
       <div class="color-selector">
         <label class="color-label">Color *</label>
         <div class="color-options">
-          <button class="color-btn active" data-color="red" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Red</button>
-          <button class="color-btn" data-color="blue" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Blue</button>
-          <button class="color-btn" data-color="green" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Green</button>
-          <button class="color-btn" data-color="black" data-images="images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg,images/products/kurtis/embroidered-kurti.svg">Black</button>
+          <!-- Will be dynamically populated from product data -->
+          <button class="color-btn" style="display:none">Loading...</button>
         </div>
       </div>
 
@@ -68,12 +67,8 @@
       <div class="size-selector">
         <label class="size-label">Size *</label>
         <div class="size-options">
-          <button class="size-btn">XS</button>
-          <button class="size-btn">S</button>
-          <button class="size-btn">M</button>
-          <button class="size-btn active">L</button>
-          <button class="size-btn">XL</button>
-          <button class="size-btn">XXL</button>
+          <!-- Will be dynamically populated from product data -->
+          <button class="size-btn">Loading...</button>
         </div>
       </div>
 
@@ -143,102 +138,38 @@
 
   <script src="script.js"></script>
   <script>
-    // Color to images mapping (using local images)
-    const colorImages = {
-      'red': [
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg'
-      ],
-      'blue': [
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg'
-      ],
-      'green': [
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg'
-      ],
-      'black': [
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg',
-        'images/products/kurtis/embroidered-kurti.svg'
-      ]
-    };
-
-    // Get selected color and size
-    function getSelectedColor() {
-      const selected = document.querySelector('.color-btn.active');
-      return selected ? selected.getAttribute('data-color') : null;
-    }
-
-    function getSelectedSize() {
-      const selected = document.querySelector('.size-btn.active');
-      return selected ? selected.textContent : null;
-    }
-
-    // Update carousel images based on selected color
-    function updateCarouselImages(color) {
-      const images = colorImages[color] || colorImages['red'];
-      document.getElementById('carouselImg1').src = images[0];
-      document.getElementById('carouselImg2').src = images[1];
-      document.getElementById('carouselImg3').src = images[2];
-    }
-
-    // Check if color and size are selected
-    function isSelectionValid() {
-      const color = getSelectedColor();
-      const size = getSelectedSize();
-      return color && size;
-    }
-
-    // Update reminder visibility (informational only, not blocking)
-    function updateReminder() {
-      const reminder = document.getElementById('selectionReminder');
-      if (reminder && isSelectionValid()) {
-        reminder.style.display = 'none';
-      }
-    }
-
-    // Add to cart WITHOUT blocking - use default values if not selected
+    // Enhanced detail page with product database integration
     window.addProductToCart = function() {
-
-      const name = document.querySelector('.detail-name').textContent;
-      const price = parseInt(document.querySelector('.detail-price .price').textContent.replace(/[₹,]/g, ''));
-      const image = document.querySelector('.carousel-image img').src;
-      const color = getSelectedColor() || 'Default';
-      const size = getSelectedSize() || 'Default';
-
-      // Add to cart with color and size info (or defaults)
-      const cartItem = {
-        id: Date.now(),
-        name: `${name}${color !== 'Default' ? ` - ${color.charAt(0).toUpperCase() + color.slice(1)}` : ''}${size !== 'Default' ? ` (${size})` : ''}`,
-        price,
-        image,
-        quantity: 1,
-        color,
-        size,
-        addedAt: new Date().toISOString()
-      };
-
-      const cart = JSON.parse(localStorage.getItem('aarzah_cart') || '[]');
-      cart.push(cartItem);
-      localStorage.setItem('aarzah_cart', JSON.stringify(cart));
-
-      // Update cart badge
-      const cartBadge = document.getElementById('cartBadge');
-      if (cartBadge) {
-        cartBadge.textContent = cart.length;
-        cartBadge.style.display = 'flex';
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      const product = PRODUCTS_DB?.[productId];
+      
+      if (!product) {
+        alert('Product not found');
+        return;
       }
 
+      // Get selected color and size
+      const colorBtn = document.querySelector('.color-btn.active');
+      const sizeBtn = document.querySelector('.size-btn.active');
+      
+      if (!colorBtn || !sizeBtn) {
+        alert('Please select both Color and Size before adding to cart');
+        return;
+      }
+
+      const color = colorBtn.textContent;
+      const size = sizeBtn.textContent;
+      const cartItemName = `${product.name} (${color}, ${size})`;
+      const image = product.images?.[0] || document.querySelector('.carousel-image img').src;
+
+      // Use secure addToCart from script.js
+      window.addToCart(cartItemName, product.price, image);
+      
       // Show toast
       const toast = document.createElement('div');
       toast.className = 'toast';
-      const colorText = color !== 'Default' ? ` - ${color.charAt(0).toUpperCase() + color.slice(1)}` : '';
-      const sizeText = size !== 'Default' ? ` (${size})` : '';
-      toast.textContent = `Added to cart!${colorText}${sizeText}`;
+      toast.textContent = `Added to cart! (${color}, ${size})`;
       document.body.appendChild(toast);
 
       setTimeout(() => {
@@ -247,7 +178,7 @@
       }, 2000);
     };
 
-    // Buy now (no selection required)
+    // Buy now
     window.buyNowProduct = function() {
       addProductToCart();
       setTimeout(() => {
@@ -255,16 +186,22 @@
       }, 300);
     };
 
-    // Initialize product detail with event listeners
+    // Initialize product detail
     document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      
+      // Render product using ProductRenderer from script.js
+      if (productId && typeof ProductRenderer !== 'undefined') {
+        ProductRenderer.renderProductDetail(productId);
+      }
+
       // Color button listeners
       const colorBtns = document.querySelectorAll('.color-btn');
       colorBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           colorBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          updateCarouselImages(btn.getAttribute('data-color'));
-          updateReminder();
         });
       });
 
@@ -274,7 +211,6 @@
         btn.addEventListener('click', () => {
           sizeBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          updateReminder();
         });
       });
 
@@ -284,10 +220,10 @@
         backBtn.addEventListener('click', () => window.history.back());
       }
 
-      // Initial carousel setup
+      // Carousel dots update
       const carousel = document.querySelector('.image-carousel');
       const dots = document.querySelectorAll('.carousel-dot');
-      if (carousel) {
+      if (carousel && dots.length > 0) {
         carousel.addEventListener('scroll', () => {
           const index = Math.round(carousel.scrollLeft / carousel.offsetWidth);
           dots.forEach((dot, i) => {
@@ -295,9 +231,6 @@
           });
         });
       }
-
-      // Initialize reminder visibility
-      updateReminder();
     });
   </script>
 

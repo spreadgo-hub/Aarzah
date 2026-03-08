@@ -310,8 +310,223 @@ const MenuManager = (() => {
   };
 })();
 
-// Expose globally
-window.toggleMenu = () => MenuManager.init() || document.getElementById('sideMenu')?.classList.toggle('active');
+// ========== PRODUCT RENDERER ==========
+const ProductRenderer = (() => {
+  return {
+    renderAllProducts() {
+      const grid = document.getElementById('productsGrid');
+      if (!grid) return;
+      
+      const products = Object.values(PRODUCTS_DB || {});
+      if (products.length === 0) return;
+      
+      grid.innerHTML = products.map(product => {
+        const stars = '★'.repeat(Math.floor(product.rating)) + '☆'.repeat(5 - Math.floor(product.rating));
+        const firstImage = product.images?.[0] || 'https://via.placeholder.com/300';
+        
+        return `
+          <div class="product-card">
+            <a href="product-detail.html?id=${product.id}" class="product-image-link">
+              <img src="${firstImage}" alt="${product.name}" style="width:100%;height:240px;object-fit:cover">
+              <span class="sale-badge">-${product.discount}%</span>
+            </a>
+            <div class="product-details">
+              <h3 class="product-name">${product.name}</h3>
+              <div class="product-price">
+                <span class="price">₹${product.price}</span>
+                <span class="original-price">₹${product.originalPrice}</span>
+              </div>
+              <div class="product-rating">${stars} <span class="rating-count">(${product.reviews})</span></div>
+            </div>
+            <button class="add-to-cart-btn" onclick="handleProductAddClick('${product.id}')">Add to Cart</button>
+          </div>
+        `;
+      }).join('');
+    },
+    
+    renderProductDetail(productId) {
+      const product = PRODUCTS_DB?.[productId];
+      if (!product) return;
+      
+      // Set product name and pricing
+      document.querySelector('.detail-name').textContent = product.name;
+      document.querySelector('.detail-price .price').textContent = '₹' + product.price;
+      document.querySelector('.detail-price .original-price').textContent = '₹' + product.originalPrice;
+      document.querySelector('.detail-price [style*="color:#2e7d32"]').textContent = `-${product.discount}% Off`;
+      document.querySelector('.detail-description').textContent = product.description;
+      
+      const ratingStars = '★'.repeat(Math.floor(product.rating)) + '☆'.repeat(5 - Math.floor(product.rating));
+      document.querySelector('.detail-rating').innerHTML = `${ratingStars} (${product.reviews} reviews) | Sold by Aarzah`;
+      
+      // Render color selector
+      const colorSelector = document.querySelector('.color-options');
+      if (colorSelector && product.colors) {
+        colorSelector.innerHTML = product.colors.map((color, idx) => `
+          <button class="color-btn ${idx === 0 ? 'active' : ''}" data-color="${color}">
+            ${color}
+          </button>
+        `).join('');
+      }
+      
+      // Render size selector
+      const sizeSelector = document.querySelector('.size-options');
+      if (sizeSelector && product.sizes) {
+        sizeSelector.innerHTML = product.sizes.map((size, idx) => `
+          <button class="size-btn ${idx === 0 ? 'active' : ''}">${size}</button>
+        `).join('');
+      }
+      
+      // Render images carousel
+      this.renderImageCarousel(product.images);
+      
+      // Setup event listeners after rendering
+      setTimeout(() => {
+        setupButtonGroup('.color-btn');
+        setupButtonGroup('.size-btn');
+        const carousel = document.querySelector('.image-carousel');
+        if (carousel && product.images.length > 1) {
+          carousel.style.display = 'block';
+        } else if (carousel && product.images.length === 1) {
+          carousel.style.display = 'none';
+          const singleImg = document.querySelector('.carousel-image img');
+          if (singleImg) singleImg.src = product.images[0];
+        }
+      }, 0);
+    },
+    
+    renderImageCarousel(images) {
+      if (!images || images.length === 0) return;
+      
+      const carousel = document.querySelector('.image-carousel');
+      if (!carousel) return;
+      
+      // Only show carousel if more than 1 image
+      if (images.length === 1) {
+        const img = document.querySelector('.carousel-image img');
+        if (img) img.src = images[0];
+        carousel.style.display = 'none';
+        return;
+      }
+      
+      carousel.style.display = 'block';
+      
+      // Create carousel images
+      const carouselContainer = carousel.querySelector('[style*="scroll"]') || carousel;
+      const existingImages = carousel.querySelectorAll('.carousel-image');
+      
+      existingImages.forEach((el, idx) => {
+        if (idx < images.length) {
+          const img = el.querySelector('img');
+          if (img) img.src = images[idx];
+        }
+      });
+      
+      // Create dots
+      const dotsContainer = carousel.querySelector('.carousel-dots');
+      if (dotsContainer) {
+        dotsContainer.innerHTML = images.map((_, idx) => 
+          `<div class="carousel-dot ${idx === 0 ? 'active' : ''}"></div>`
+        ).join('');
+      }
+    }
+  };
+})();
+
+// ========== PRODUCT SELECTION ==========
+window.handleProductAddClick = (productId) => {
+  const product = PRODUCTS_DB?.[productId];
+  if (!product) {
+    alert('Product not found');
+    return;
+  }
+  
+  // Check if product requires selection
+  const selectedColor = document.querySelector('.color-btn.active');
+  const selectedSize = document.querySelector('.size-btn.active');
+  
+  // For detail page - require selection
+  if (document.querySelector('.detail-info')) {
+    if (!selectedColor || !selectedSize) {
+      alert('Please select both Color and Size before adding to cart');
+      return;
+    }
+    
+    const color = selectedColor.textContent;
+    const size = selectedSize.textContent;
+    const itemName = `${product.name} (${color}, ${size})`;
+    const itemImage = product.images?.[0] || 'https://via.placeholder.com/300';
+    
+    cart.addItem(itemName, product.price, itemImage);
+    return;
+  }
+  
+  // For home page - show quick selection modal
+  showProductSelectionModal(product);
+};
+
+// ========== PRODUCT SELECTION MODAL ==========
+function showProductSelectionModal(product) {
+  const html = `
+    <div id="productModal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-end">
+      <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:20px;max-height:80vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <h2 style="margin:0">${product.name}</h2>
+          <button onclick="document.getElementById('productModal').remove()" style="background:none;border:none;font-size:24px;cursor:pointer">✕</button>
+        </div>
+        
+        <div style="margin-bottom:16px">
+          <img src="${product.images?.[0]}" alt="${product.name}" style="width:100%;height:200px;object-fit:cover;border-radius:8px">
+        </div>
+        
+        <div style="margin-bottom:16px">
+          <strong>Price:</strong> ₹${product.price} <span style="text-decoration:line-through;color:#999">₹${product.originalPrice}</span>
+        </div>
+        
+        <div style="margin-bottom:16px">
+          <label style="display:block;margin-bottom:8px"><strong>Select Color:</strong></label>
+          <div id="colorOptionsModal" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px">
+            ${product.colors.map((c, i) => `
+              <button class="color-select-btn ${i === 0 ? 'active' : ''}" data-color="${c}" onclick="this.parentElement.querySelectorAll('.color-select-btn').forEach(b => b.classList.remove('active')); this.classList.add('active')" style="padding:12px;border:2px solid #ddd;border-radius:8px;cursor:pointer;background:white;font-size:12px;font-weight:500">
+                ${c}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div style="margin-bottom:16px">
+          <label style="display:block;margin-bottom:8px"><strong>Select Size:</strong></label>
+          <div id="sizeOptionsModal" style="display:grid;grid-template-columns:repeat(${Math.min(product.sizes.length, 5)}, 1fr);gap:8px">
+            ${product.sizes.map((s, i) => `
+              <button class="size-select-btn ${i === 0 ? 'active' : ''}" data-size="${s}" onclick="this.parentElement.querySelectorAll('.size-select-btn').forEach(b => b.classList.remove('active')); this.classList.add('active')" style="padding:12px;border:2px solid #ddd;border-radius:8px;cursor:pointer;background:white;font-size:12px;font-weight:600">
+                ${s}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        
+        <button onclick="addToCartWithSelected('${product.id}')" style="width:100%;padding:16px;background:#d32f2f;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:8px">
+          Add to Cart ✓
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+window.addToCartWithSelected = (productId) => {
+  const product = PRODUCTS_DB?.[productId];
+  const modal = document.getElementById('productModal');
+  
+  const color = modal?.querySelector('.color-select-btn.active')?.textContent || 'Default';
+  const size = modal?.querySelector('.size-select-btn.active')?.textContent || 'Free Size';
+  
+  const itemName = `${product.name} (${color}, ${size})`;
+  const itemImage = product.images?.[0];
+  
+  cart.addItem(itemName, product.price, itemImage);
+  modal?.remove();
+};
 
 // ========== CART FUNCTIONS ==========
 window.addToCart = (name, price, image = 'https://via.placeholder.com/300') => {
@@ -551,6 +766,18 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Update cart badge
   cart.updateBadge();
+  
+  // Render all products if on homepage
+  if (document.getElementById('productsGrid')) {
+    ProductRenderer.renderAllProducts();
+  }
+  
+  // Render product detail if on detail page
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
+  if (productId && document.querySelector('.detail-info')) {
+    ProductRenderer.renderProductDetail(productId);
+  }
 
   // Handle announcement scroller
   const announcementSlider = document.querySelector('.announcement-slider');
