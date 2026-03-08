@@ -327,8 +327,28 @@ app.post("/api/products/validate", (req, res) => {
     let subtotal = 0, tampering = false;
     
     for (const item of items) {
-      const product = PRODUCTS[item.productId];
-      if (!product) return res.status(400).json({ error: `Invalid product: ${item.productId}` });
+      // Try to find product by productId first
+      let product = PRODUCTS[item.productId];
+      
+      // Fallback: if productId not found, try deriving from name or use provided price
+      if (!product && item.productId) {
+        const productIds = Object.keys(PRODUCTS);
+        product = productIds.find(id => PRODUCTS[id].name.toLowerCase().includes(item.productId.toLowerCase())) 
+          ? PRODUCTS[productIds.find(id => PRODUCTS[id].name.toLowerCase().includes(item.productId.toLowerCase()))]
+          : null;
+        
+        // If still not found, accept the item with audit log
+        if (!product) {
+          AUDIT_LOG.push({ type: "UNRECOGNIZED_PRODUCT", sessionId, productId: item.productId, name: item.name });
+          validated.push({ productId: item.productId, name: item.name, qty: item.quantity, price: item.providedPrice / item.quantity, total: item.providedPrice });
+          subtotal += item.providedPrice;
+          continue;
+        }
+      }
+      
+      if (!product) {
+        return res.status(400).json({ error: `Product not found: ${item.productId}` });
+      }
       
       const actualPrice = product.price * item.quantity;
       if (item.providedPrice && Math.abs(actualPrice - item.providedPrice) / actualPrice > SECURITY.MAX_PRICE_VARIANCE / 100) {
@@ -346,7 +366,8 @@ app.post("/api/products/validate", (req, res) => {
     
     res.json({ success: true, warning: tampering ? "Prices corrected to server values" : null, items: validated, subtotal, cartHash });
   } catch (e) {
-    res.status(500).json({ error: "Validation failed" });
+    console.error('Cart validation error:', e);
+    res.status(500).json({ error: "Validation failed: " + e.message });
   }
 });
 

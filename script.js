@@ -77,10 +77,14 @@ class SecurityManager {
         },
         body: JSON.stringify({ items: cartItems, sessionId: this.sessionId })
       });
-      return await response.json();
+      const data = await response.json();
+      if (!response.ok && !data.success) {
+        return { success: false, error: data.error || 'Validation failed' };
+      }
+      return data;
     } catch (e) {
       console.error('Cart validation error:', e);
-      return { success: false };
+      return { success: false, error: 'Network error: ' + e.message };
     }
   }
 
@@ -171,7 +175,7 @@ class Cart {
     }
   }
 
-  addItem(name, price, image) {
+  addItem(name, price, image, productId = null) {
     if (!name || price < 0) return false;
     
     const existingItem = this.items.find(item => item.name === name && item.price === price);
@@ -185,7 +189,8 @@ class Cart {
         price,
         image,
         quantity: 1,
-        addedAt: new Date().toISOString()
+        addedAt: new Date().toISOString(),
+        productId: productId
       });
     }
     
@@ -524,13 +529,13 @@ window.addToCartWithSelected = (productId) => {
   const itemName = `${product.name} (${color}, ${size})`;
   const itemImage = product.images?.[0];
   
-  cart.addItem(itemName, product.price, itemImage);
+  cart.addItem(itemName, product.price, itemImage, productId);
   modal?.remove();
 };
 
 // ========== CART FUNCTIONS ==========
-window.addToCart = (name, price, image = 'https://via.placeholder.com/300') => {
-  return cart.addItem(name, price, image);
+window.addToCart = (name, price, image = 'https://via.placeholder.com/300', productId = null) => {
+  return cart.addItem(name, price, image, productId);
 };
 
 window.removeItemFromCart = (id) => {
