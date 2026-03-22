@@ -147,113 +147,14 @@
       </div>
     </section>
 
-    <!-- TRENDING NOW SECTION -->
+    <!-- TRENDING NOW SECTION (ALL 18 PRODUCTS) -->
     <section class="products-section">
       <div class="section-header">
-        <h2>Trending Now</h2>
-        <a href="#" class="view-all">View All →</a>
+        <h2>All Collections</h2>
+        <a href="#" class="view-all">Showing all →</a>
       </div>
-      <div class="products-grid">
-        <div class="product-card">
-          <a href="product-detail.html?id=1" class="product-image-link">
-            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Embroidered Kurti">
-            <span class="sale-badge">-20%</span>
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Embroidered Cotton Kurti</h3>
-            <div class="product-price">
-              <span class="price">₹649</span>
-              <span class="original-price">₹799</span>
-            </div>
-            <div class="product-rating">★★★★★ <span class="rating-count">(124)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Embroidered Cotton Kurti', 649, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <a href="product-detail.html?id=2" class="product-image-link">
-            <img src="images/products/sarees/printed-saree.svg" alt="Printed Saree">
-            <span class="sale-badge">-15%</span>
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Printed Saree with Blouse</h3>
-            <div class="product-price">
-              <span class="price">₹1,299</span>
-              <span class="original-price">₹1,499</span>
-            </div>
-            <div class="product-rating">★★★★☆ <span class="rating-count">(98)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Printed Saree with Blouse', 1299, 'images/products/sarees/printed-saree.svg')">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <a href="product-detail.html?id=3" class="product-image-link">
-            <img src="images/products/suits/palazzo-suit.svg" alt="Palazzo Suit">
-            <span class="sale-badge">-10%</span>
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Palazzo Suit Set</h3>
-            <div class="product-price">
-              <span class="price">₹899</span>
-              <span class="original-price">₹999</span>
-            </div>
-            <div class="product-rating">★★★★★ <span class="rating-count">(76)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Palazzo Suit Set', 899, 'images/products/suits/palazzo-suit.svg')">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <a href="product-detail.html?id=4" class="product-image-link">
-            <img src="images/products/dresses/casual-dress.svg" alt="Casual Dress">
-            <span class="sale-badge">-10%</span>
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Cotton Casual Dress</h3>
-            <div class="product-price">
-              <span class="price">₹449</span>
-              <span class="original-price">₹499</span>
-            </div>
-            <div class="product-rating">★★★★★ <span class="rating-count">(89)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Cotton Casual Dress', 449, 'images/products/dresses/casual-dress.svg')">Add to Cart</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW ARRIVALS SECTION -->
-    <section class="products-section">
-      <div class="section-header">
-        <h2>New Arrivals</h2>
-        <a href="#" class="view-all">View All →</a>
-      </div>
-      <div class="products-grid">
-        <div class="product-card">
-          <a href="product-detail.html?id=5" class="product-image-link">
-            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Designer Kurti">
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Designer Silk Kurti</h3>
-            <div class="product-price">
-              <span class="price">₹1,599</span>
-            </div>
-            <div class="product-rating">★★★★★ <span class="rating-count">(42)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Designer Silk Kurti', 1599, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <a href="product-detail.html?id=6" class="product-image-link">
-            <img src="images/products/kurtis/embroidered-kurti.svg" alt="Kurta Set">
-          </a>
-          <div class="product-details">
-            <h3 class="product-name">Printed Kurta with Pants</h3>
-            <div class="product-price">
-              <span class="price">₹799</span>
-            </div>
-            <div class="product-rating">★★★★☆ <span class="rating-count">(67)</span></div>
-          </div>
-          <button class="add-to-cart-btn" onclick="addToCart('Printed Kurta with Pants', 799, 'images/products/kurtis/embroidered-kurti.svg')">Add to Cart</button>
-        </div>
+      <div class="products-grid" id="productsGrid">
+        <!-- Products will be dynamically rendered here -->
       </div>
     </section>
   </main>
@@ -287,6 +188,7 @@
     </a>
   </nav>
 
+  <script src="products-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

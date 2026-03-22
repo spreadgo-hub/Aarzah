@@ -17,9 +17,9 @@ WHATSAPP_PROVIDER=gupshup
 # ========== TWILIO CONFIGURATION ==========
 # Get from: https://www.twilio.com/console
 # Only needed if WHATSAPP_PROVIDER=twilio
-TWILIO_ACCOUNT_SID=AC1234567890abcdef1234567890abcdef
-TWILIO_AUTH_TOKEN=your-twilio-auth-token-here
-TWILIO_WHATSAPP_NUMBER=+1234567890
+TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID
+TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN
+TWILIO_WHATSAPP_NUMBER=YOUR_TWILIO_WHATSAPP_NUMBER
 
 # ========== GUPSHUP CONFIGURATION ==========
 # Get from: https://www.gupshup.io/developer/dashboard
